@@ -10,6 +10,7 @@ from pathlib import Path
 import uuid
 from pydantic import BaseModel
 from oxford_validator import OxfordValidator
+from synonym_service import get_synonym_service
 
 # Import logging configuration
 from logger_config import (
@@ -113,6 +114,13 @@ process_pool = ProcessPoolExecutor(max_workers=2)
 
 # Initialize Oxford validator
 oxford_validator = OxfordValidator()
+
+# Initialize synonym service (add your Merriam-Webster API key in .env if you have one)
+import os
+from dotenv import load_dotenv
+load_dotenv()
+MERRIAM_WEBSTER_KEY = os.getenv('MERRIAM_WEBSTER_API_KEY')
+synonym_service = get_synonym_service(MERRIAM_WEBSTER_KEY)
 
 @monitor_async_performance("load_words_concurrent")
 async def load_words_concurrent():
@@ -461,7 +469,7 @@ async def get_performance_stats():
 
 @app.post("/words/validate")
 async def validate_word(request: ValidateWordRequest):
-    """Validate a word using Oxford Dictionary API"""
+    """Validate a word using Oxford Dictionary and fetch synonyms from multiple sources"""
     try:
         word = request.word.strip()
         if not word:
@@ -471,6 +479,18 @@ async def validate_word(request: ValidateWordRequest):
             raise HTTPException(status_code=400, detail="Word must contain only letters")
         
         validation_result = await oxford_validator.validate_word(word)
+        
+        # Get synonyms from multiple sources (DataMuse, Merriam-Webster, Oxford)
+        synonym_data = await synonym_service.get_synonyms_combined(word, validation_result, max_results=15)
+        
+        # Update validation_result with combined synonyms
+        validation_result['synonyms'] = synonym_data['synonyms']
+        validation_result['synonym_sources'] = synonym_data['sources']
+        
+        # Update reason to include synonym info
+        if synonym_data['count'] > 0:
+            if 'synonym' not in validation_result['reason']:
+                validation_result['reason'] += f" and {synonym_data['count']} synonym(s) from multiple sources"
         
         return {
             "success": True,

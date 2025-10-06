@@ -95,7 +95,7 @@ export class WordService {
   // Check if word exists in our collection
   private checkWordInCollection(word: string): Observable<boolean> {
     return new Observable(observer => {
-      this.http.post<any>(`${this.baseUrl}/words/check`, { word: word }).subscribe({
+      this.http.get<any>(`${this.baseUrl}/words/check?word=${encodeURIComponent(word)}`).subscribe({
         next: (response) => {
           observer.next(response.exists);
           observer.complete();
