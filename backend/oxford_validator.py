@@ -49,6 +49,7 @@ class OxfordValidator:
                 "definitions": [],
                 "word_forms": [],
                 "examples": [],
+                "synonyms": [],
                 "reason": "Invalid word format (must contain only letters)"
             }
         
@@ -73,6 +74,7 @@ class OxfordValidator:
                 "definitions": [],
                 "word_forms": [],
                 "examples": [],
+                "synonyms": [],
                 "reason": f"Error during validation: {str(e)}"
             }
     
@@ -102,6 +104,7 @@ class OxfordValidator:
                     "definitions": [],
                     "word_forms": [],
                     "examples": [],
+                    "synonyms": [],
                     "reason": "Not found in Oxford Dictionary"
                 }
             else:
@@ -112,6 +115,7 @@ class OxfordValidator:
                     "definitions": [],
                     "word_forms": [],
                     "examples": [],
+                    "synonyms": [],
                     "reason": f"HTTP error: {response.status_code}"
                 }
                 
@@ -123,6 +127,7 @@ class OxfordValidator:
                 "definitions": [],
                 "word_forms": [],
                 "examples": [],
+                "synonyms": [],
                 "reason": f"Network error: {str(e)}"
             }
     
@@ -142,6 +147,7 @@ class OxfordValidator:
                     "definitions": [],
                     "word_forms": [],
                     "examples": [],
+                    "synonyms": [],
                     "reason": "No definition section found"
                 }
             
@@ -160,6 +166,25 @@ class OxfordValidator:
                 pos_text = pos_elem.get_text(strip=True)
                 if pos_text and pos_text not in word_forms:
                     word_forms.append(pos_text)
+            
+            # Extract synonyms from Oxford Dictionary
+            synonyms = []
+            synonym_selectors = [
+                'span.syn',  # Synonym class
+                'div.synonyms span',  # Synonyms in div
+                'span[class*="syn"]',  # Any span with class containing 'syn'
+                'div[class*="synonym"] span',  # Synonym divs
+            ]
+            
+            for selector in synonym_selectors:
+                synonym_elements = soup.select(selector)
+                for syn_elem in synonym_elements[:10]:  # Limit to first 10 synonyms
+                    synonym_text = syn_elem.get_text(strip=True)
+                    if synonym_text and len(synonym_text) > 1 and synonym_text.lower() != word.lower() and synonym_text not in synonyms:
+                        # Clean up the synonym text
+                        synonym_text = synonym_text.replace('•', '').strip()
+                        if synonym_text and synonym_text.isalpha():
+                            synonyms.append(synonym_text)
             
             # Extract examples from Oxford Dictionary
             examples = []
@@ -201,10 +226,15 @@ class OxfordValidator:
             # Limit total examples to 5
             examples = examples[:5]
             
+            # Limit total synonyms to 10
+            synonyms = synonyms[:10]
+            
             is_valid = len(definitions) > 0
             reason = f"Found in Oxford Dictionary with {len(definitions)} definition(s)"
             if examples:
                 reason += f" and {len(examples)} example(s)"
+            if synonyms:
+                reason += f" and {len(synonyms)} synonym(s)"
             
             return {
                 "word": word,
@@ -212,6 +242,7 @@ class OxfordValidator:
                 "definitions": definitions,
                 "word_forms": word_forms,
                 "examples": examples,
+                "synonyms": synonyms,
                 "reason": reason
             }
             
@@ -223,6 +254,7 @@ class OxfordValidator:
                 "definitions": [],
                 "word_forms": [],
                 "examples": [],
+                "synonyms": [],
                 "reason": f"HTML parsing error: {str(e)}"
             }
     
@@ -269,6 +301,7 @@ class OxfordValidator:
                         "definitions": [],
                         "word_forms": [],
                         "examples": [],
+                        "synonyms": [],
                         "reason": f"Exception: {str(result)}"
                     })
                 else:

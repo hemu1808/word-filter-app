@@ -146,6 +146,7 @@ export interface OxfordValidation {
   word_forms: string[];
   pronunciations?: Pronunciation[];
   examples?: string[];
+  synonyms?: string[];
   reason: string;
 }
 

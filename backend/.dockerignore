@@ -1,13 +1,64 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Testing
 .pytest_cache/
 .coverage
-.env
+htmlcov/
+*.cover
+.hypothesis/
+tests/
+
+# Development
+*.log
+logs/
+*.sqlite
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+*.md
+!README.md
+
+# Backup files
+*_backup.txt
+*_original_backup.txt
+*_merged.txt
+*_new.txt
+english-words-466k.txt
+google-10k-common.txt
+invalid_words.txt
+cleanup_operation_log.txt
+
+# Scripts
+cleanup_words.py
+merge_word_lists.py
+validate_words.py
+run_tests.py
+check_words.py
+
+# Alternative main files
+main_*.py
+!main.py
+
+# Development requirements
+requirements-dev.txt
+pytest.ini
+
+# Git
 .git/
 .gitignore
-README.md
-Dockerfile
-.dockerignore

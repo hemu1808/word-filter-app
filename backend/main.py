@@ -35,6 +35,8 @@ class AddWordResponse(BaseModel):
     success: bool
     message: str
     word: Optional[str] = None
+    was_new: bool = False
+    total_words: Optional[int] = None
 
 app = FastAPI(
     title="Word Filter API - Optimized", 
@@ -522,7 +524,9 @@ async def add_word_with_validation(request: ValidateWordRequest):
             return AddWordResponse(
                 success=True,
                 message=f"Word '{word}' already exists in collection",
-                word=word
+                word=word,
+                was_new=False,
+                total_words=len(words_list)
             )
         
         # Validate with Oxford Dictionary if requested
@@ -532,7 +536,9 @@ async def add_word_with_validation(request: ValidateWordRequest):
                 return AddWordResponse(
                     success=False,
                     message=f"Word '{word}' not found in Oxford Dictionary: {oxford_result['reason']}",
-                    word=word
+                    word=word,
+                    was_new=False,
+                    total_words=len(words_list)
                 )
         
         # Add to collection (both in-memory and to file)
@@ -555,7 +561,9 @@ async def add_word_with_validation(request: ValidateWordRequest):
         return AddWordResponse(
             success=True,
             message=f"Word '{word}' added successfully",
-            word=word
+            word=word,
+            was_new=True,
+            total_words=len(words_list)
         )
         
     except HTTPException:
