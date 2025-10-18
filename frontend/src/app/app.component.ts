@@ -49,10 +49,7 @@ import { WordFilter, WordStats } from './models/word.model';
   ]
 })
 export class AppComponent implements OnInit {
-  title = 'Word Filter App';
-  
-  // Search mode properties
-  searchMode: 'basic' | 'advanced' | 'puzzle' = 'basic'; // Default to basic search
+  title = 'Word Explorer';
   
   // Basic search properties
   searchWord = '';
@@ -60,41 +57,50 @@ export class AppComponent implements OnInit {
   isSearching = false;
   searchError = '';
 
-  // Advanced filter properties
+  // Word stats and UI
+  wordStats: WordStats | null = null;
+  performanceStats: any = null;
+  performanceStatsVisible = false;
+
+  // Kid-friendly quick suggestions
+  quickSuggestions = [
+    'butterfly', 'rainbow', 'adventure', 'magic', 'dinosaur', 
+    'unicorn', 'treasure', 'mystery', 'friendship', 'courage'
+  ];
+
+  // Advanced filter properties (kept for compatibility)
   filterForm: FormGroup;
   words: string[] = [];
-  wordStats: WordStats | null = null;
   loading = false;
   error = '';
 
-  // Interactive tab properties
+  // Interactive tab properties (kept for compatibility)
   interactiveWordLength: number | null = null;
   letterBoxes: string[] = [];
   interactiveWords: string[] = [];
   interactiveLoading = false;
   interactiveError = '';
   
-  // Puzzle solver properties
+  // Puzzle solver properties (kept for compatibility)
   puzzleLength: number = 5;
   puzzlePattern: string = '';
 
-  // Stats panel properties
-  statsPanelExpanded = false;
-
-  // Search toggle properties
-  searchToggleExpanded = false;
-
-  // Puzzle toggle properties
-  puzzleToggleExpanded = false;
-  puzzlePanelExpanded = false;
+  // Browse by length properties
+  browseLength: number = 5;
+  browseWords: string[] = [];
+  browseLoading = false;
+  browseError = '';
 
   // Theme properties
   isDarkMode = false;
 
-  // Hover states for animations
+  // Legacy properties (kept for compatibility)
+  searchMode: 'basic' | 'advanced' | 'puzzle' | 'browse' = 'basic';
+  statsPanelExpanded = false;
+  searchToggleExpanded = false;
+  puzzleToggleExpanded = false;
+  puzzlePanelExpanded = false;
   hoveredCard: string | null = null;
-
-  // Ticker properties
   tickerItems: string[] = [];
   currentTickerIndex = 0;
 
@@ -118,6 +124,22 @@ export class AppComponent implements OnInit {
     this.loadWordStats();
     this.searchWords(); // Load initial words
     this.startTicker();
+  }
+
+  // New kid-friendly methods
+  setSearchMode(mode: 'basic' | 'advanced' | 'puzzle' | 'browse') {
+    this.searchMode = mode;
+    this.showNotification(`Switched to ${mode} mode`, 'info');
+  }
+
+  onSearchInput() {
+    // Clear previous results when typing
+    if (this.searchResult) {
+      this.searchResult = null;
+    }
+    if (this.searchError) {
+      this.searchError = '';
+    }
   }
 
   loadWordStats() {
@@ -401,12 +423,6 @@ export class AppComponent implements OnInit {
   }
 
   // Basic search methods
-  onSearchInput() {
-    // Clear previous results when user types
-    if (this.searchResult) {
-      this.searchResult = null;
-    }
-  }
 
   searchWordBasic() {
     if (!this.searchWord || this.searchWord.trim() === '') {
@@ -528,11 +544,72 @@ export class AppComponent implements OnInit {
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark-theme', this.isDarkMode);
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
     this.showNotification(
       `Switched to ${this.isDarkMode ? 'dark' : 'light'} mode`,
       'info'
     );
+  }
+
+  // Performance stats methods
+  togglePerformanceStats() {
+    this.performanceStatsVisible = !this.performanceStatsVisible;
+    if (this.performanceStatsVisible && !this.performanceStats) {
+      this.loadPerformanceStats();
+    }
+  }
+
+  loadPerformanceStats() {
+    this.wordService.getPerformanceStats().subscribe({
+      next: (stats) => {
+        this.performanceStats = stats;
+      },
+      error: (error) => {
+        console.error('Error loading performance stats:', error);
+        this.showNotification('Failed to load performance stats', 'error');
+      }
+    });
+  }
+
+  // Browse by length methods
+  onBrowseLengthChange() {
+    if (this.browseLength && this.browseLength > 0) {
+      this.browseWords = [];
+      this.browseError = '';
+    }
+  }
+
+  loadWordsByLength() {
+    if (!this.browseLength || this.browseLength <= 0) {
+      this.browseError = 'Please enter a valid word length.';
+      this.showNotification('Please enter a valid word length.', 'error');
+      return;
+    }
+
+    this.browseLoading = true;
+    this.browseError = '';
+
+    this.wordService.getWordsByLength(this.browseLength).subscribe({
+      next: (response) => {
+        this.browseWords = response.words;
+        this.browseLoading = false;
+        this.showNotification(`Found ${response.words.length} words of length ${this.browseLength}!`, 'success');
+      },
+      error: (error) => {
+        console.error('Error loading words by length:', error);
+        this.browseError = 'Failed to load words. Make sure the backend is running.';
+        this.browseLoading = false;
+        this.showNotification('Failed to load words. Check backend connection.', 'error');
+      }
+    });
+  }
+
+  clearBrowse() {
+    this.browseLength = 5;
+    this.browseWords = [];
+    this.browseError = '';
+    this.browseLoading = false;
+    this.showNotification('Browse cleared', 'info');
   }
 
   setHoveredCard(cardId: string | null) {

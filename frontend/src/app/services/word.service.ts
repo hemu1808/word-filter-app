@@ -130,6 +130,11 @@ export class WordService {
   addWord(word: string): Observable<AddWordResponse> {
     return this.http.post<AddWordResponse>(`${this.baseUrl}/words/add`, { word: word });
   }
+
+  // Get performance statistics
+  getPerformanceStats(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/performance/stats`);
+  }
 }
 
 // Interfaces for Oxford integration

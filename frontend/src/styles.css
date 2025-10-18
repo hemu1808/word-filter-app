@@ -1,79 +1,86 @@
-/* Import modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+/* Import kid-friendly fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap');
 
-/* CSS Custom Properties - Clean Minimalist Theme */
+/* CSS Custom Properties - Kid-Friendly & Parent-Friendly Theme */
 :root {
-  /* Primary Colors - Clean & Professional */
-  --primary: #2563eb;
-  --primary-light: #3b82f6;
-  --primary-dark: #1d4ed8;
-  --primary-50: #eff6ff;
-  --primary-100: #dbeafe;
+  /* Primary Colors - Bright & Cheerful */
+  --primary: #4F46E5;
+  --primary-light: #6366F1;
+  --primary-dark: #3730A3;
+  --primary-50: #EEF2FF;
+  --primary-100: #E0E7FF;
   
-  /* Secondary & Accent - Minimal Use */
-  --secondary: #10b981;
-  --secondary-light: #34d399;
-  --accent: #f59e0b;
+  /* Secondary Colors - Fun & Engaging */
+  --secondary: #10B981;
+  --secondary-light: #34D399;
+  --secondary-dark: #047857;
+  --accent: #F59E0B;
+  --accent-light: #FCD34D;
+  --accent-dark: #D97706;
   
-  /* Neutral Colors - Main Palette */
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
+  /* Kid-Friendly Colors */
+  --fun-blue: #3B82F6;
+  --fun-green: #10B981;
+  --fun-orange: #F59E0B;
+  --fun-pink: #EC4899;
+  --fun-purple: #8B5CF6;
+  --fun-yellow: #FCD34D;
   
-  /* Background Colors */
-  --bg-primary: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
-  --bg-secondary: linear-gradient(135deg, #ADD8E6 0%, #E0F6FF 100%);
-  --bg-light: linear-gradient(135deg, #F0F8FF 0%, #E6F3FF 100%);
+  /* Background Colors - Soft & Welcoming */
+  --bg-primary: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 50%, #E0F2FE 100%);
+  --bg-secondary: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 50%, #F0FDF4 100%);
+  --bg-accent: linear-gradient(135deg, #FEF3C7 0%, #FEF7CD 50%, #FEF3C7 100%);
   --bg-white: #ffffff;
   
   /* Surface Colors */
   --surface-primary: #ffffff;
-  --surface-glass: rgba(255, 255, 255, 0.8);
+  --surface-glass: rgba(255, 255, 255, 0.9);
   --surface-card: #ffffff;
+  --surface-soft: #F8FAFC;
   
   /* Text Colors */
-  --text-primary: #1e293b;
+  --text-primary: #1E293B;
   --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-muted: #64748B;
   --text-white: #ffffff;
+  --text-fun: #4F46E5;
   
   /* Border Colors */
-  --border-light: #e2e8f0;
-  --border-medium: #cbd5e1;
-  --border-strong: #94a3b8;
+  --border-light: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --border-strong: #94A3B8;
+  --border-fun: #C7D2FE;
   
   /* Interactive States */
-  --hover-lift: translateY(-2px);
-  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --hover-lift: translateY(-4px);
+  --focus-ring: 0 0 0 4px rgba(79, 70, 229, 0.2);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-fun: 0 4px 20px rgba(79, 70, 229, 0.15);
   
-  /* Status Colors - Minimal */
-  --success: #10b981;
-  --success-light: #d1fae5;
+  /* Status Colors - Kid-Friendly */
+  --success: #10B981;
+  --success-light: #D1FAE5;
   --success-dark: #047857;
-  --warning: #f59e0b;
-  --warning-light: #fef3c7;
-  --warning-dark: #d97706;
-  --error: #ef4444;
-  --error-light: #fee2e2;
-  --error-dark: #dc2626;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --warning-dark: #D97706;
+  --error: #EF4444;
+  --error-light: #FEE2E2;
+  --error-dark: #DC2626;
+  --info: #3B82F6;
+  --info-light: #DBEAFE;
+  --info-dark: #1D4ED8;
   
-  /* Border Radius - Subtle */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Border Radius - Playful */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
   --radius-full: 9999px;
   
   /* Spacing */
@@ -82,15 +89,17 @@
   --spacing-md: 1.5rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
   
-  /* Typography */
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography - Kid-Friendly */
+  --font-primary: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   
-  /* Animation */
+  /* Animation - Bouncy & Fun */
   --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* Global Reset and Base Styles */
@@ -113,8 +122,8 @@ html {
 
 body {
   font-family: var(--font-primary);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 18px;
+  line-height: 1.7;
   color: var(--text-primary);
   background: var(--bg-primary);
   background-attachment: fixed;
@@ -133,11 +142,28 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(135, 206, 235, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(176, 224, 230, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(173, 216, 230, 0.2) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
+  animation: gentleFloat 20s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1); 
+    opacity: 0.8;
+  }
+  33% { 
+    transform: translate(30px, -20px) scale(1.05); 
+    opacity: 0.6;
+  }
+  66% { 
+    transform: translate(-20px, 30px) scale(0.95); 
+    opacity: 0.7;
+  }
 }
 
 /* Scrollbar Styling - Clean */
