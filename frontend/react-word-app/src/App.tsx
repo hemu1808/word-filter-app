@@ -165,9 +165,12 @@ const App: React.FC = () => {
           <section>
             {/* Highlighted Search Section */}
             <div className="kid-search-section">
-              <h2 className="text-2xl font-bold mb-6 text-center">🔍 Word Search Adventure</h2>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-2">🔍 Word Search Adventure</h2>
+                <p className="text-lg opacity-80">Discover the magic of words with our interactive explorer</p>
+              </div>
               
-              <form onSubmit={handleSearch} className="space-y-4">
+              <form onSubmit={handleSearch} className="space-y-6">
                 <div className="relative">
                   <input
                     type="text"
@@ -178,7 +181,7 @@ const App: React.FC = () => {
                     disabled={isSearching}
                   />
                   {isSearching && (
-                    <Loader className="absolute right-3 top-3 w-5 h-5 animate-spin" />
+                    <Loader className="absolute right-4 top-4 w-6 h-6 animate-spin" />
                   )}
                 </div>
                 
@@ -192,9 +195,9 @@ const App: React.FC = () => {
               </form>
 
               {/* Quick Suggestions */}
-              <div className="mt-6">
-                <p className="text-sm mb-3 font-semibold">Try these fun words:</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-8">
+                <p className="text-lg mb-4 font-semibold text-center">Try these fun words:</p>
+                <div className="flex flex-wrap gap-3 justify-center">
                   {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word) => (
                     <button
                       key={word}
@@ -216,14 +219,14 @@ const App: React.FC = () => {
               </div>
 
               {/* Advanced Filters */}
-              <div className="mt-6">
+              <div className="mt-8">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="kid-button w-full"
                 >
-                  <Filter className="w-4 h-4 mr-2 inline" />
+                  <Filter className="w-5 h-5 mr-2 inline" />
                   Advanced Filters
-                  <ChevronDown className={`w-4 h-4 ml-2 inline transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 ml-2 inline transition-transform ${showFilters ? 'rotate-180' : ''}`} />
                 </button>
                 
                 <AnimatePresence>
@@ -232,11 +235,11 @@ const App: React.FC = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="mt-4 space-y-3 overflow-hidden"
+                      className="mt-6 space-y-4 overflow-hidden"
                     >
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm mb-2 font-semibold">Min Length</label>
+                          <label className="block text-sm mb-3 font-semibold">Min Length</label>
                           <input
                             type="number"
                             value={filters.minLength}
@@ -246,7 +249,7 @@ const App: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm mb-2 font-semibold">Max Length</label>
+                          <label className="block text-sm mb-3 font-semibold">Max Length</label>
                           <input
                             type="number"
                             value={filters.maxLength}
@@ -258,7 +261,7 @@ const App: React.FC = () => {
                       </div>
                       
                       <div>
-                        <label className="block text-sm mb-2 font-semibold">Starts With</label>
+                        <label className="block text-sm mb-3 font-semibold">Starts With</label>
                         <input
                           type="text"
                           value={filters.startsWith}
@@ -269,7 +272,7 @@ const App: React.FC = () => {
                       </div>
                       
                       <div>
-                        <label className="block text-sm mb-2 font-semibold">Ends With</label>
+                        <label className="block text-sm mb-3 font-semibold">Ends With</label>
                         <input
                           type="text"
                           value={filters.endsWith}
@@ -280,7 +283,7 @@ const App: React.FC = () => {
                       </div>
                       
                       <div>
-                        <label className="block text-sm mb-2 font-semibold">Contains</label>
+                        <label className="block text-sm mb-3 font-semibold">Contains</label>
                         <input
                           type="text"
                           value={filters.contains}

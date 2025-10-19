@@ -305,35 +305,51 @@ textarea:focus {
 }
 
 .kid-search-section {
-  background: rgba(255, 255, 255, 0.9);
-  border: 3px solid #1E3A8A;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  margin-bottom: 2rem;
 }
 
 .kid-page.dark .kid-search-section {
-  background: rgba(26, 26, 46, 0.9);
-  border-color: #60A5FA;
+  background: rgba(26, 26, 46, 0.15);
+  border-color: rgba(96, 165, 250, 0.3);
   color: #fff;
 }
 
-.kid-search-section::before {
-  content: '🔍 📚 ✨ 🎯 🌟';
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 1.5rem;
-  opacity: 0.3;
-  animation: float 3s ease-in-out infinite;
+.kid-search-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+.kid-search-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kid-search-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .ios-panel-title {
@@ -404,22 +420,24 @@ textarea:focus {
   margin-top: 0.25rem;
 }
 
-/* Kid-friendly inputs and buttons */
+/* Kid-friendly inputs and buttons with glassmorphism */
 .kid-input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #1E3A8A;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
   font-size: 1.1rem;
   color: #1a202c;
   transition: all 0.3s ease;
   font-family: 'Fredoka', sans-serif;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .kid-page.dark .kid-input {
-  background: rgba(26, 26, 46, 0.9);
-  border-color: #60A5FA;
+  background: rgba(26, 26, 46, 0.1);
+  border-color: rgba(96, 165, 250, 0.3);
   color: #fff;
 }
 
@@ -433,17 +451,24 @@ textarea:focus {
 
 .kid-input:focus {
   outline: none;
-  border-color: #3B82F6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
   transform: scale(1.02);
 }
 
+.kid-page.dark .kid-input:focus {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+}
+
 .kid-button {
-  background: #1E3A8A;
-  color: #fff;
-  border: 2px solid #1E3A8A;
-  border-radius: 12px;
-  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: #1a202c;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 1.25rem 2rem;
   font-weight: 700;
   font-size: 1.1rem;
   transition: all 0.3s ease;
@@ -451,20 +476,25 @@ textarea:focus {
   font-family: 'Fredoka', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .kid-page.dark .kid-button {
-  background: #60A5FA;
-  border-color: #60A5FA;
+  background: rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.3);
+  color: #fff;
 }
 
 .kid-button:hover { 
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .kid-page.dark .kid-button:hover {
-  box-shadow: 0 8px 20px rgba(96, 165, 250, 0.3);
+  background: rgba(96, 165, 250, 0.3);
+  box-shadow: 0 8px 25px rgba(96, 165, 250, 0.2);
 }
 
 .kid-button:disabled { 
@@ -474,90 +504,110 @@ textarea:focus {
 }
 
 .kid-chip {
-  background: #E0F2FE;
-  color: #1E3A8A;
-  border: 2px solid #1E3A8A;
-  border-radius: 25px;
-  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #1a202c;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.75rem 1.25rem;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Fredoka', sans-serif;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .kid-page.dark .kid-chip {
-  background: rgba(96, 165, 250, 0.2);
-  color: #60A5FA;
-  border-color: #60A5FA;
+  background: rgba(96, 165, 250, 0.15);
+  color: #fff;
+  border-color: rgba(96, 165, 250, 0.3);
 }
 
 .kid-chip:hover { 
-  background: #BAE6FD;
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .kid-page.dark .kid-chip:hover {
-  background: rgba(96, 165, 250, 0.3);
+  background: rgba(96, 165, 250, 0.25);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
 }
 
-/* Results area */
+/* Results area with iOS 26 glassmorphism */
 .kid-results {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #1E3A8A;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  margin-top: 2rem;
+  transition: all 0.3s ease;
 }
 
 .kid-page.dark .kid-results {
-  background: rgba(26, 26, 46, 0.9);
-  border-color: #60A5FA;
+  background: rgba(26, 26, 46, 0.1);
+  border-color: rgba(96, 165, 250, 0.3);
   color: #fff;
 }
 
+.kid-results:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
 .kid-results-list {
-  max-height: 50vh;
+  max-height: 60vh;
   overflow-y: auto;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .kid-page.dark .kid-results-list {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.1);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
 .kid-results-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .kid-results-list::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 .kid-results-list::-webkit-scrollbar-thumb {
-  background: #1E3A8A;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
-.kid-page.dark .kid-results-list::-webkit-scrollbar-thumb {
-  background: #60A5FA;
+.kid-results-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .kid-result-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #1a202c;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   font-family: 'Fredoka', sans-serif;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .kid-page.dark .kid-result-item {
@@ -566,8 +616,9 @@ textarea:focus {
 }
 
 .kid-result-item:hover {
-  background: rgba(30, 58, 138, 0.1);
-  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .kid-page.dark .kid-result-item:hover {
