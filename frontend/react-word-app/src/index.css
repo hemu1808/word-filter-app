@@ -1141,10 +1141,14 @@ body {
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
-      padding: 2rem;
+      padding: 1.5rem;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .feature-card::before {
@@ -1291,5 +1295,16 @@ body {
       
       .hero-subtitle {
         font-size: 1.25rem;
+      }
+      
+      .feature-card {
+        min-height: 240px;
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .feature-card {
+        min-height: 260px;
       }
     }

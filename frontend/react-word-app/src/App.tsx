@@ -381,7 +381,7 @@ const App: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="flex flex-col md:flex-row justify-center items-stretch gap-4 max-w-6xl mx-auto">
             {[
               {
                 icon: '🔍',
@@ -415,12 +415,12 @@ const App: React.FC = () => {
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 onClick={feature.action}
-                className="feature-card cursor-pointer"
+                className="feature-card cursor-pointer flex-1 min-w-0 max-w-xs"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                <div className="mt-4 flex items-center text-blue-600 font-medium">
+                <div className="text-3xl mb-3 text-center">{feature.icon}</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">{feature.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed text-center mb-3">{feature.description}</p>
+                <div className="flex items-center justify-center text-blue-600 font-medium text-sm">
                   <span>Try it now</span>
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </div>
