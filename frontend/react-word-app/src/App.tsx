@@ -355,8 +355,6 @@ const App: React.FC = () => {
 
           </section>
 
-          </section>
-
           {/* Right Column (Results) */}
           <section>
             {error && (
