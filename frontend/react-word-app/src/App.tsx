@@ -96,30 +96,30 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Compact Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <BookOpen className="w-6 h-6 text-blue-600" />
-              <h1 className="text-xl font-bold text-gray-900">Word Explorer</h1>
+              <BookOpen className="w-6 h-6 text-gray-900" />
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight">Word Explorer</h1>
             </div>
             
             {/* Stats Bar */}
             {wordStats && (
-              <div className="hidden md:flex items-center space-x-6 text-sm">
+              <div className="hidden md:flex items-center space-x-6 text-sm text-gray-700">
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-600">Total Words:</span>
-                  <span className="font-semibold text-blue-600">{wordStats.total_words.toLocaleString()}</span>
+                  <span>Total Words</span>
+                  <span className="font-semibold text-gray-900">{wordStats.total_words.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-600">Avg Length:</span>
-                  <span className="font-semibold text-blue-600">{wordStats.avg_length.toFixed(1)}</span>
+                  <span>Avg Length</span>
+                  <span className="font-semibold text-gray-900">{wordStats.avg_length.toFixed(1)}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-600">Range:</span>
-                  <span className="font-semibold text-blue-600">{wordStats.min_length}-{wordStats.max_length}</span>
+                  <span>Range</span>
+                  <span className="font-semibold text-gray-900">{wordStats.min_length}-{wordStats.max_length}</span>
                 </div>
               </div>
             )}
@@ -135,7 +135,7 @@ const App: React.FC = () => {
             {/* Search Card */}
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                <Search className="w-5 h-5 mr-2 text-blue-600" />
+                <Search className="w-5 h-5 mr-2 text-gray-900" />
                 Quick Search
               </h2>
               
@@ -146,18 +146,18 @@ const App: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Enter a word..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none text-sm"
                     disabled={isSearching}
                   />
                   {isSearching && (
-                    <Loader className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-blue-600" />
+                    <Loader className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-gray-900" />
                   )}
                 </div>
                 
                 <button
                   type="submit"
                   disabled={isSearching || !searchTerm.trim()}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -195,7 +195,7 @@ const App: React.FC = () => {
                 className="w-full flex items-center justify-between text-lg font-semibold text-gray-900 mb-3"
               >
                 <span className="flex items-center">
-                  <Filter className="w-5 h-5 mr-2 text-blue-600" />
+                  <Filter className="w-5 h-5 mr-2 text-gray-900" />
                   Advanced Filters
                 </span>
                 <ChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
@@ -268,7 +268,7 @@ const App: React.FC = () => {
                     <button
                       onClick={handleFilterSearch}
                       disabled={isSearching}
-                      className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
                     >
                       Apply Filters
                     </button>
@@ -281,7 +281,7 @@ const App: React.FC = () => {
             {wordStats && (
               <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                  <TrendingUp className="w-5 h-5 mr-2 text-gray-900" />
                   Database Stats
                 </h2>
                 <div className="space-y-2 text-sm">

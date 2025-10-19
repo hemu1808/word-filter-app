@@ -49,18 +49,17 @@ body {
 }
 
 .btn:focus-visible {
-  ring: 2px;
-  ring-color: #3b82f6;
-  ring-offset: 2px;
+  outline: 2px solid #111111;
+  outline-offset: 2px;
 }
 
 .btn-primary {
-  background: #3b82f6;
+  background: #111111;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #2563eb;
+  background: #000000;
 }
 
 .btn-primary:disabled {
