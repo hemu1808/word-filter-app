@@ -45,7 +45,9 @@ export class WordService {
    */
   async searchBasicWord(word: string): Promise<SearchResult> {
     try {
-      const response: AxiosResponse<SearchResult> = await this.api.get(`/words/search/${encodeURIComponent(word)}`);
+      const response: AxiosResponse<SearchResult> = await this.api.get('/words/search-basic', {
+        params: { word: word.trim() }
+      });
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
@@ -97,12 +99,9 @@ export class WordService {
    */
   async getInteractiveWords(wordLength: number, pattern: string): Promise<string[]> {
     try {
-      const params: InteractiveSearchParams = {
-        word_length: wordLength,
-        pattern: pattern
-      };
-
-      const response: AxiosResponse<string[]> = await this.api.post('/words/interactive', params);
+      const response: AxiosResponse<string[]> = await this.api.get('/words/interactive', {
+        params: { length: wordLength, pattern }
+      });
       return response.data;
     } catch (error: any) {
       throw new Error(`Failed to get interactive words: ${error.message}`);
@@ -114,7 +113,7 @@ export class WordService {
    */
   async getWordsByLength(length: number): Promise<WordsByLengthResponse> {
     try {
-      const response: AxiosResponse<WordsByLengthResponse> = await this.api.get(`/words/length/${length}`);
+      const response: AxiosResponse<WordsByLengthResponse> = await this.api.get(`/words/by-length/${length}`);
       return response.data;
     } catch (error: any) {
       throw new Error(`Failed to get words by length: ${error.message}`);
