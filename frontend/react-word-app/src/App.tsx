@@ -4,6 +4,7 @@ import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader, Menu, Sun
 import { wordService } from './services/WordService';
 import type { SearchResult, WordStats } from './types/WordTypes';
 import WordResults from './components/WordResults';
+import FloatingParticles from './components/FloatingParticles';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -98,6 +99,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`kid-page ${isDarkMode ? 'dark' : ''}`}>
+      <FloatingParticles />
       {/* Kid-Friendly Header */}
       <header className="kid-header">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -136,26 +138,33 @@ const App: React.FC = () => {
           <aside>
             {wordStats && (
               <div className="kid-stats">
-                <h2 className="text-lg font-semibold mb-4 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  Database Stats
+                <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                  📊 Database Stats
                 </h2>
-                <div className="space-y-3">
-                  <div className="kid-stat-item">
-                    <span className="kid-stat-label">Total Words:</span>
-                    <span className="kid-stat-value">{wordStats.total_words.toLocaleString()}</span>
+                <div className="space-y-4">
+                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
+                    <span className="kid-stat-label">✨ Total Words:</span>
+                    <span className="kid-stat-value bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent font-bold">
+                      {wordStats.total_words.toLocaleString()}
+                    </span>
                   </div>
-                  <div className="kid-stat-item">
-                    <span className="kid-stat-label">Average Length:</span>
-                    <span className="kid-stat-value">{wordStats.avg_length.toFixed(2)} letters</span>
+                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
+                    <span className="kid-stat-label">📏 Average Length:</span>
+                    <span className="kid-stat-value bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent font-bold">
+                      {wordStats.avg_length.toFixed(2)} letters
+                    </span>
                   </div>
-                  <div className="kid-stat-item">
-                    <span className="kid-stat-label">Shortest Word:</span>
-                    <span className="kid-stat-value">{wordStats.min_length} letter</span>
+                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
+                    <span className="kid-stat-label">🔤 Shortest Word:</span>
+                    <span className="kid-stat-value bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent font-bold">
+                      {wordStats.min_length} letter
+                    </span>
                   </div>
-                  <div className="kid-stat-item">
-                    <span className="kid-stat-label">Longest Word:</span>
-                    <span className="kid-stat-value">{wordStats.max_length} letters</span>
+                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
+                    <span className="kid-stat-label">📚 Longest Word:</span>
+                    <span className="kid-stat-value bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent font-bold">
+                      {wordStats.max_length} letters
+                    </span>
                   </div>
                 </div>
               </div>
@@ -166,8 +175,16 @@ const App: React.FC = () => {
             {/* Highlighted Search Section */}
             <div className="kid-search-section">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-2">🔍 Word Search Adventure</h2>
-                <p className="text-lg opacity-80">Discover the magic of words with our interactive explorer</p>
+                <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
+                  ✨ Word Search Adventure ✨
+                </h2>
+                <p className="text-xl opacity-90 font-medium">Discover the magic of words with our interactive explorer</p>
+                <div className="mt-4 flex justify-center space-x-2">
+                  <span className="text-2xl animate-bounce">🌟</span>
+                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.1s'}}>📚</span>
+                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.2s'}}>🎯</span>
+                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.3s'}}>🚀</span>
+                </div>
               </div>
               
               <form onSubmit={handleSearch} className="space-y-6">
@@ -196,9 +213,9 @@ const App: React.FC = () => {
 
               {/* Quick Suggestions */}
               <div className="mt-8">
-                <p className="text-lg mb-4 font-semibold text-center">Try these fun words:</p>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word) => (
+                <p className="text-xl mb-6 font-bold text-center">✨ Try these magical words ✨</p>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word, index) => (
                     <button
                       key={word}
                       onClick={() => {
@@ -210,8 +227,10 @@ const App: React.FC = () => {
                           }
                         }, 100);
                       }}
-                      className="kid-chip"
+                      className="kid-chip transform hover:scale-110 transition-all duration-300"
+                      style={{animationDelay: `${index * 0.1}s`}}
                     >
+                      <span className="mr-2">✨</span>
                       {word}
                     </button>
                   ))}
@@ -361,31 +380,41 @@ const App: React.FC = () => {
               )
             ) : (
               <div className="kid-empty">
-                <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold mb-2">🌟 Start Your Word Adventure!</h3>
-                <p className="mb-6">
-                  Type any word above to discover its meaning, pronunciation, and more fun facts!
-                </p>
-                <div className="max-w-md mx-auto">
-                  <p className="text-sm mb-4 font-semibold">Try these exciting words:</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {['serendipity', 'ephemeral', 'eloquent', 'magnificent', 'wonderful'].map((word) => (
-                      <button
-                        key={word}
-                        onClick={() => {
-                          setSearchTerm(word);
-                          setTimeout(() => {
-                            const form = document.querySelector('form');
-                            if (form) {
-                              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                            }
-                          }, 100);
-                        }}
-                        className="kid-chip"
-                      >
-                        {word}
-                      </button>
-                    ))}
+                <div className="text-center">
+                  <div className="relative mb-6">
+                    <Search className="w-20 h-20 mx-auto opacity-60 animate-pulse" />
+                    <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
+                    <div className="absolute -bottom-2 -left-2 text-2xl animate-bounce" style={{animationDelay: '0.5s'}}>🌟</div>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                    🌟 Start Your Word Adventure! 🌟
+                  </h3>
+                  <p className="text-lg mb-8 opacity-90">
+                    Type any word above to discover its meaning, pronunciation, and more fun facts!
+                  </p>
+                  <div className="max-w-lg mx-auto">
+                    <p className="text-lg mb-6 font-bold">✨ Try these exciting words ✨</p>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      {['serendipity', 'ephemeral', 'eloquent', 'magnificent', 'wonderful'].map((word, index) => (
+                        <button
+                          key={word}
+                          onClick={() => {
+                            setSearchTerm(word);
+                            setTimeout(() => {
+                              const form = document.querySelector('form');
+                              if (form) {
+                                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                              }
+                            }, 100);
+                          }}
+                          className="kid-chip transform hover:scale-110 transition-all duration-300"
+                          style={{animationDelay: `${index * 0.1}s`}}
+                        >
+                          <span className="mr-2">🎯</span>
+                          {word}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
