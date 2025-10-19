@@ -6,7 +6,9 @@ import type { SearchResult, WordStats } from './types/WordTypes';
 import WordResults from './components/WordResults';
 import FloatingParticles from './components/FloatingParticles';
 import MagicalEffects from './components/MagicalEffects';
-import ThemeSelector from './components/ThemeSelector';
+import RefinedHeader from './components/RefinedHeader';
+import RefinedSearchSection from './components/RefinedSearchSection';
+import RefinedStats from './components/RefinedStats';
 import useSound from './hooks/useSound';
 
 const App: React.FC = () => {
@@ -119,241 +121,45 @@ const App: React.FC = () => {
     <div className={`kid-page ${currentTheme} ${isDarkMode ? 'dark' : ''}`}>
       <FloatingParticles />
       <MagicalEffects theme={currentTheme} />
-      {/* Magical Header */}
-      <header className="kid-header">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <motion.button 
-              className="p-2 rounded-full hover:bg-black/10 transition-all" 
-              aria-label="Back"
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <span className="text-2xl">←</span>
-            </motion.button>
-            <motion.div 
-              className="kid-logo"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              Word★Explorer
-            </motion.div>
-          </div>
-          <div className="flex items-center gap-3">
-            <ThemeSelector
-              currentTheme={currentTheme}
-              onThemeChange={handleThemeChange}
-              isOpen={isThemeSelectorOpen}
-              onToggle={() => setIsThemeSelectorOpen(!isThemeSelectorOpen)}
-            />
-            <nav className="hidden md:flex items-center gap-3">
-              <button className="nav-item">Apps</button>
-              <button className="nav-item">Store</button>
-              <button className="nav-item">Parents & Teachers</button>
-              <button className="nav-item">How to Join</button>
-              <button className="nav-item">Sign In</button>
-            </nav>
-            <button className="md:hidden p-2 rounded-full hover:bg-black/10 transition-all" aria-label="Menu">
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* Refined Header */}
+      <RefinedHeader
+        currentTheme={currentTheme}
+        onThemeChange={handleThemeChange}
+        isThemeSelectorOpen={isThemeSelectorOpen}
+        onThemeToggle={() => setIsThemeSelectorOpen(!isThemeSelectorOpen)}
+        onBack={() => window.history.back()}
+        onMenu={() => {}}
+        onSettings={() => {}}
+      />
 
-      {/* Kid-Friendly Main */}
+      {/* Refined Main Content */}
       <main className="kid-main">
         <div className="kid-columns">
-          {/* Left Column - Stats */}
-          <aside>
-            {wordStats && (
-              <div className="kid-stats">
-                <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-                  📊 Database Stats
-                </h2>
-                <div className="space-y-4">
-                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
-                    <span className="kid-stat-label">✨ Total Words:</span>
-                    <span className="kid-stat-value bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent font-bold">
-                      {wordStats.total_words.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
-                    <span className="kid-stat-label">📏 Average Length:</span>
-                    <span className="kid-stat-value bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent font-bold">
-                      {wordStats.avg_length.toFixed(2)} letters
-                    </span>
-                  </div>
-                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
-                    <span className="kid-stat-label">🔤 Shortest Word:</span>
-                    <span className="kid-stat-value bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent font-bold">
-                      {wordStats.min_length} letter
-                    </span>
-                  </div>
-                  <div className="kid-stat-item transform hover:scale-105 transition-all duration-300">
-                    <span className="kid-stat-label">📚 Longest Word:</span>
-                    <span className="kid-stat-value bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent font-bold">
-                      {wordStats.max_length} letters
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </aside>
-          {/* Main Content - Search Section */}
-          <section>
-            {/* Highlighted Search Section */}
-            <div className="kid-search-section">
-              <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
-                  ✨ Word Search Adventure ✨
-                </h2>
-                <p className="text-xl opacity-90 font-medium">Discover the magic of words with our interactive explorer</p>
-                <div className="mt-4 flex justify-center space-x-2">
-                  <span className="text-2xl animate-bounce">🌟</span>
-                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.1s'}}>📚</span>
-                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.2s'}}>🎯</span>
-                  <span className="text-2xl animate-bounce" style={{animationDelay: '0.3s'}}>🚀</span>
-                </div>
-              </div>
-              
-              <form onSubmit={handleSearch} className="space-y-6">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Type any word to explore..."
-                    className="kid-input"
-                    disabled={isSearching}
-                  />
-                  {isSearching && (
-                    <Loader className="absolute right-4 top-4 w-6 h-6 animate-spin" />
-                  )}
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={isSearching || !searchTerm.trim()}
-                  className="kid-button w-full"
-                >
-                  {isSearching ? 'Searching...' : '🚀 Search Word'}
-                </button>
-              </form>
-
-              {/* Quick Suggestions */}
-              <div className="mt-8">
-                <p className="text-xl mb-6 font-bold text-center">✨ Try these magical words ✨</p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word, index) => (
-                    <button
-                      key={word}
-                      onClick={() => {
-                        playSound('click');
-                        setSearchTerm(word);
-                        setTimeout(() => {
-                          const form = document.querySelector('form');
-                          if (form) {
-                            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                          }
-                        }, 100);
-                      }}
-                      className="kid-chip transform hover:scale-110 transition-all duration-300"
-                      style={{animationDelay: `${index * 0.1}s`}}
-                    >
-                      <span className="mr-2">✨</span>
-                      {word}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Advanced Filters */}
-              <div className="mt-8">
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="kid-button w-full"
-                >
-                  <Filter className="w-5 h-5 mr-2 inline" />
-                  Advanced Filters
-                  <ChevronDown className={`w-5 h-5 ml-2 inline transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-                </button>
-                
-                <AnimatePresence>
-                  {showFilters && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="mt-6 space-y-4 overflow-hidden"
-                    >
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm mb-3 font-semibold">Min Length</label>
-                          <input
-                            type="number"
-                            value={filters.minLength}
-                            onChange={(e) => setFilters({...filters, minLength: e.target.value})}
-                            className="kid-input"
-                            placeholder="1"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm mb-3 font-semibold">Max Length</label>
-                          <input
-                            type="number"
-                            value={filters.maxLength}
-                            onChange={(e) => setFilters({...filters, maxLength: e.target.value})}
-                            className="kid-input"
-                            placeholder="20"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm mb-3 font-semibold">Starts With</label>
-                        <input
-                          type="text"
-                          value={filters.startsWith}
-                          onChange={(e) => setFilters({...filters, startsWith: e.target.value})}
-                          className="kid-input"
-                          placeholder="e.g., un"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm mb-3 font-semibold">Ends With</label>
-                        <input
-                          type="text"
-                          value={filters.endsWith}
-                          onChange={(e) => setFilters({...filters, endsWith: e.target.value})}
-                          className="kid-input"
-                          placeholder="e.g., ing"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm mb-3 font-semibold">Contains</label>
-                        <input
-                          type="text"
-                          value={filters.contains}
-                          onChange={(e) => setFilters({...filters, contains: e.target.value})}
-                          className="kid-input"
-                          placeholder="e.g., tion"
-                        />
-                      </div>
-                      
-                      <button
-                        onClick={handleFilterSearch}
-                        disabled={isSearching}
-                        className="kid-button w-full"
-                      >
-                        Apply Filters
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+          {/* Left Column - Refined Stats */}
+          <RefinedStats wordStats={wordStats} />
+          
+          {/* Main Content - Refined Search Section */}
+          <RefinedSearchSection
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            onSearch={handleSearch}
+            isSearching={isSearching}
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            filters={filters}
+            setFilters={setFilters}
+            onFilterSearch={handleFilterSearch}
+            onSuggestionClick={(word) => {
+              playSound('click');
+              setSearchTerm(word);
+              setTimeout(() => {
+                const form = document.querySelector('form');
+                if (form) {
+                  form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
+              }, 100);
+            }}
+          />
 
             {/* Results Section */}
             {error && (
