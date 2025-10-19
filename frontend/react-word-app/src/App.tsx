@@ -322,17 +322,51 @@ const App: React.FC = () => {
             )}
 
             {searchResult ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white rounded-lg border border-gray-200 p-6"
-              >
-                <WordResults
-                  result={searchResult}
-                  onAddWord={handleAddWord}
-                  onExploreWord={handleExploreWord}
-                />
-              </motion.div>
+              searchResult.filteredWords && searchResult.filteredWords.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="bg-white rounded-lg border border-gray-200 p-4"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Results</h3>
+                    <span className="text-xs text-gray-500">{searchResult.filteredWords.length.toLocaleString()} found</span>
+                  </div>
+                  <div className="border border-gray-200 rounded-md overflow-hidden">
+                    <ul className="divide-y divide-gray-200 max-h-[70vh] overflow-auto">
+                      {searchResult.filteredWords.slice(0, 500).map((w, idx) => (
+                        <li key={w + idx}>
+                          <button
+                            onClick={() => handleExploreWord(w)}
+                            className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center justify-between"
+                          >
+                            <span className="text-gray-900">{w}</span>
+                            <span className="text-gray-400 text-xs">Explore →</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {searchResult.filteredWords.length > 500 && (
+                    <p className="mt-3 text-xs text-gray-500">Showing first 500 results. Refine filters to narrow results.</p>
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="bg-white rounded-lg border border-gray-200 p-4"
+                >
+                  <div className="mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Result</h3>
+                  </div>
+                  <WordResults
+                    result={searchResult}
+                    onAddWord={handleAddWord}
+                    onExploreWord={handleExploreWord}
+                  />
+                </motion.div>
+              )
             ) : (
               <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
                 <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -355,7 +389,7 @@ const App: React.FC = () => {
                             }
                           }, 100);
                         }}
-                        className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-sm font-medium transition-colors"
+                        className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors"
                       >
                         {word}
                       </button>
