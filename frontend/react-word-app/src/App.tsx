@@ -161,7 +161,8 @@ const App: React.FC = () => {
             }}
           />
 
-            {/* Results Section */}
+          {/* Results Section */}
+          <section>
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
