@@ -194,7 +194,7 @@ const App: React.FC = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Enter a word..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none text-sm"
+                    className="star-input"
                     disabled={isSearching}
                   />
                   {isSearching && (
@@ -205,7 +205,7 @@ const App: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSearching || !searchTerm.trim()}
-                  className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  className="star-button w-full"
                 >
                   {isSearching ? 'Searching...' : 'Search'}
                 </button>
@@ -218,16 +218,8 @@ const App: React.FC = () => {
                   {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word) => (
                     <button
                       key={word}
-                      onClick={() => {
-                        setSearchTerm(word);
-                        setTimeout(() => {
-                          const form = document.querySelector('form');
-                          if (form) {
-                            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                          }
-                        }, 100);
-                      }}
-                      className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs text-gray-700 transition-colors"
+                      onClick={() => runBasicSearch(word)}
+                      className="star-chip"
                     >
                       {word}
                     </button>
@@ -429,16 +421,8 @@ const App: React.FC = () => {
                     {['serendipity', 'ephemeral', 'eloquent', 'magnificent', 'wonderful'].map((word) => (
                       <button
                         key={word}
-                        onClick={() => {
-                          setSearchTerm(word);
-                          setTimeout(() => {
-                            const form = document.querySelector('form');
-                            if (form) {
-                              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                            }
-                          }, 100);
-                        }}
-                        className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors"
+                        onClick={() => runBasicSearch(word)}
+                        className="star-chip"
                       >
                         {word}
                       </button>

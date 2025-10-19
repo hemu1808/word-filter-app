@@ -178,14 +178,15 @@ textarea:focus {
   min-height: 100vh;
   background: #87CEEB;
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(255,255,255,0.15) 0%, transparent 50%);
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25) 0%, transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 55%),
+    radial-gradient(circle at 40% 60%, rgba(255,255,255,0.12) 0%, transparent 55%);
 }
 
 .starfall-header {
   background: #1E3A8A; /* dark blue */
   color: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 
 .starfall-header .nav-item {
@@ -225,10 +226,11 @@ textarea:focus {
 }
 
 .starfall-panel {
-  background: rgba(255,255,255,0.6);
+  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
   border: 2px solid #1E3A8A;
   border-radius: 16px;
   padding: 1rem 0.75rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
 
 .starfall-panel-title {
@@ -240,6 +242,7 @@ textarea:focus {
   border-radius: 12px;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.75rem;
+  box-shadow: inset 0 -2px 0 rgba(255,255,255,0.2);
 }
 
 .starfall-grid {
@@ -262,11 +265,18 @@ textarea:focus {
 
 .starfall-activity:hover { 
   transform: translateY(-2px);
-  box-shadow: 0 6px 10px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.16);
 }
 
 .starfall-activity .icon {
   font-size: clamp(1.25rem, 2vw, 1.75rem);
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  background: #FDE68A; /* amber 300 */
+  border: 2px solid #1E3A8A;
+  border-radius: 9999px;
 }
 
 .starfall-activity .title {
@@ -292,3 +302,39 @@ textarea:focus {
   min-height: 0;
   overflow: auto;
 }
+
+/* Starfall inputs and buttons */
+.star-input {
+  width: 100%;
+  border: 2px solid #1E3A8A;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+}
+.star-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30,58,138,0.2);
+}
+
+.star-button {
+  background: #1E3A8A;
+  color: #fff;
+  border: 2px solid #1E3A8A;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+.star-button:hover { transform: translateY(-1px); }
+.star-button:disabled { opacity: 0.6; transform: none; }
+
+.star-chip {
+  background: #E0F2FE;
+  color: #1E3A8A;
+  border: 2px solid #1E3A8A;
+  border-radius: 9999px;
+  padding: 0.25rem 0.6rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.star-chip:hover { background: #cfe9fb; }
