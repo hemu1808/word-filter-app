@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader, Menu } from 'lucide-react';
 import { wordService } from './services/WordService';
@@ -51,7 +51,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleFilterSearch = async () => {
+  const handleFilterSearch = useCallback(async () => {
     setIsSearching(true);
     setError(null);
     try {
@@ -75,7 +75,7 @@ const App: React.FC = () => {
     } finally {
       setIsSearching(false);
     }
-  };
+  }, [filters]);
 
   const handleAddWord = async (word: string) => {
     try {
@@ -96,149 +96,161 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="starfall-page">
-      {/* Starfall Header */}
-      <header className="starfall-header sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-full hover:bg-white/10" aria-label="Back">←</button>
-            <div className="starfall-logo">Word★Explorer</div>
+    <div className="ios-page">
+      {/* iOS Header */}
+      <header className="ios-header">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button className="p-2 rounded-full hover:bg-white/10 transition-all" aria-label="Back">
+              <span className="text-white text-xl">←</span>
+            </button>
+            <div className="ios-logo">Word★Explorer</div>
           </div>
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-3">
             <button className="nav-item">Apps</button>
             <button className="nav-item">Store</button>
             <button className="nav-item">Parents & Teachers</button>
             <button className="nav-item">How to Join</button>
             <button className="nav-item">Sign In</button>
           </nav>
-          <button className="md:hidden p-2 rounded hover:bg-white/10" aria-label="Menu">
-            <Menu className="w-5 h-5" />
+          <button className="md:hidden p-2 rounded-full hover:bg-white/10 transition-all" aria-label="Menu">
+            <Menu className="w-6 h-6 text-white" />
           </button>
         </div>
       </header>
 
-      {/* Starfall Main */}
-      <main className="starfall-main">
-        <h2 className="starfall-panel-title mb-4">Grades 1, 2, 3 — Language Arts & Music</h2>
-        <div className="starfall-columns">
-          {/* Left Column (Math-like panel repurposed to Filters) */}
-          <aside className="starfall-panel">
-            <div className="starfall-panel-title">Tools</div>
-            <div className="starfall-grid">
-              <button className="starfall-activity" onClick={() => setShowFilters((v) => !v)}>
-                <span className="icon">⚙️</span>
-                <div>
-                  <div className="title">Advanced Filters</div>
-                  <div className="subtitle">Length, pattern, contains</div>
-                </div>
-              </button>
-              <button className="starfall-activity" onClick={() => {
-                const sample = ['serendipity','galaxy','harmony','magnificent'];
-                setSearchTerm(sample[Math.floor(Math.random()*sample.length)]);
-                setTimeout(() => document.querySelector('form')?.dispatchEvent(new Event('submit', {cancelable:true,bubbles:true})), 50);
-              }}>
-                <span className="icon">🎲</span>
-                <div>
-                  <div className="title">Surprise Me</div>
-                  <div className="subtitle">Search a random word</div>
-                </div>
-              </button>
-            </div>
-          </aside>
-          {/* Center Column (Activities: Basic/Advanced/Browse/Puzzles) + Search */}
-          <section className="space-y-4">
-            <div className="starfall-panel">
-              <div className="starfall-panel-title">Activities</div>
-              <div className="grid sm:grid-cols-2 gap-2">
-                <button className="starfall-activity" onClick={(e) => { e.preventDefault(); }}>
-                  <span className="icon">🔍</span>
+      {/* iOS Main */}
+      <main className="ios-main">
+        <h2 className="text-center text-white text-2xl font-semibold mb-8 opacity-90">Grades 1, 2, 3 — Language Arts & Music</h2>
+        <div className="ios-columns">
+          {/* Left Column - Tools */}
+          <aside className="ios-panel">
+            <div className="ios-panel-title">Tools</div>
+            <div className="ios-panel-content">
+              <div className="ios-grid">
+                <button className="ios-activity" onClick={() => setShowFilters((v) => !v)}>
+                  <span className="icon">⚙️</span>
                   <div>
-                    <div className="title">Basic Search</div>
-                    <div className="subtitle">Look up any word</div>
+                    <div className="title">Advanced Filters</div>
+                    <div className="subtitle">Length, pattern, contains</div>
                   </div>
                 </button>
-                <button className="starfall-activity" onClick={() => setShowFilters(true)}>
-                  <span className="icon">🎯</span>
+                <button className="ios-activity" onClick={() => {
+                  const sample = ['serendipity','galaxy','harmony','magnificent'];
+                  setSearchTerm(sample[Math.floor(Math.random()*sample.length)]);
+                  setTimeout(() => document.querySelector('form')?.dispatchEvent(new Event('submit', {cancelable:true,bubbles:true})), 50);
+                }}>
+                  <span className="icon">🎲</span>
                   <div>
-                    <div className="title">Advanced</div>
-                    <div className="subtitle">Smart filtering</div>
-                  </div>
-                </button>
-                <button className="starfall-activity" onClick={() => setFilters({ ...filters, minLength: '5', maxLength: '7' })}>
-                  <span className="icon">📚</span>
-                  <div>
-                    <div className="title">Browse by Length</div>
-                    <div className="subtitle">Quick presets</div>
-                  </div>
-                </button>
-                <button className="starfall-activity" onClick={() => setFilters({ ...filters, contains: 'tion' })}>
-                  <span className="icon">🧩</span>
-                  <div>
-                    <div className="title">Pattern Match</div>
-                    <div className="subtitle">Find by pattern</div>
+                    <div className="title">Surprise Me</div>
+                    <div className="subtitle">Search a random word</div>
                   </div>
                 </button>
               </div>
             </div>
-            {/* Search Card */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                <Search className="w-5 h-5 mr-2 text-gray-900" />
-                Quick Search
-              </h2>
-              
-              <form onSubmit={handleSearch} className="space-y-3">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Enter a word..."
-                    className="star-input"
-                    disabled={isSearching}
-                  />
-                  {isSearching && (
-                    <Loader className="absolute right-3 top-2.5 w-4 h-4 animate-spin text-gray-900" />
-                  )}
+          </aside>
+          {/* Center Column - Activities & Search */}
+          <section className="space-y-6">
+            <div className="ios-panel">
+              <div className="ios-panel-title">Activities</div>
+              <div className="ios-panel-content">
+                <div className="ios-grid">
+                  <button className="ios-activity" onClick={(e) => { e.preventDefault(); }}>
+                    <span className="icon">🔍</span>
+                    <div>
+                      <div className="title">Basic Search</div>
+                      <div className="subtitle">Look up any word</div>
+                    </div>
+                  </button>
+                  <button className="ios-activity" onClick={() => setShowFilters(true)}>
+                    <span className="icon">🎯</span>
+                    <div>
+                      <div className="title">Advanced</div>
+                      <div className="subtitle">Smart filtering</div>
+                    </div>
+                  </button>
+                  <button className="ios-activity" onClick={() => setFilters({ ...filters, minLength: '5', maxLength: '7' })}>
+                    <span className="icon">📚</span>
+                    <div>
+                      <div className="title">Browse by Length</div>
+                      <div className="subtitle">Quick presets</div>
+                    </div>
+                  </button>
+                  <button className="ios-activity" onClick={() => setFilters({ ...filters, contains: 'tion' })}>
+                    <span className="icon">🧩</span>
+                    <div>
+                      <div className="title">Pattern Match</div>
+                      <div className="subtitle">Find by pattern</div>
+                    </div>
+                  </button>
                 </div>
-                
-                <button
-                  type="submit"
-                  disabled={isSearching || !searchTerm.trim()}
-                  className="star-button w-full"
-                >
-                  {isSearching ? 'Searching...' : 'Search'}
-                </button>
-              </form>
+              </div>
+            </div>
+            {/* Search Card */}
+            <div className="ios-panel">
+              <div className="ios-panel-title">Quick Search</div>
+              <div className="ios-panel-content">
+                <form onSubmit={handleSearch} className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Enter a word..."
+                      className="ios-input"
+                      disabled={isSearching}
+                    />
+                    {isSearching && (
+                      <Loader className="absolute right-3 top-3 w-5 h-5 animate-spin text-white" />
+                    )}
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    disabled={isSearching || !searchTerm.trim()}
+                    className="ios-button w-full"
+                  >
+                    {isSearching ? 'Searching...' : 'Search'}
+                  </button>
+                </form>
 
-              {/* Quick Suggestions */}
-              <div className="mt-4">
-                <p className="text-xs text-gray-600 mb-2">Quick suggestions:</p>
-                <div className="flex flex-wrap gap-2">
-                  {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word) => (
-                    <button
-                      key={word}
-                      onClick={() => runBasicSearch(word)}
-                      className="star-chip"
-                    >
-                      {word}
-                    </button>
-                  ))}
+                {/* Quick Suggestions */}
+                <div className="mt-6">
+                  <p className="text-sm text-white/80 mb-3">Quick suggestions:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['hello', 'world', 'python', 'javascript', 'beautiful'].map((word) => (
+                      <button
+                        key={word}
+                        onClick={() => {
+                          setSearchTerm(word);
+                          setTimeout(() => {
+                            const form = document.querySelector('form');
+                            if (form) {
+                              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                            }
+                          }, 100);
+                        }}
+                        className="ios-chip"
+                      >
+                        {word}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Advanced Filters Card */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="ios-panel">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="w-full flex items-center justify-between text-lg font-semibold text-gray-900 mb-3"
+                className="w-full flex items-center justify-between text-lg font-semibold text-white mb-3 ios-panel-title"
               >
                 <span className="flex items-center">
-                  <Filter className="w-5 h-5 mr-2 text-gray-900" />
+                  <Filter className="w-5 h-5 mr-2 text-white" />
                   Advanced Filters
                 </span>
-                <ChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-5 h-5 transition-transform text-white ${showFilters ? 'rotate-180' : ''}`} />
               </button>
               
               <AnimatePresence>
@@ -249,97 +261,97 @@ const App: React.FC = () => {
                     exit={{ height: 0, opacity: 0 }}
                     className="space-y-3 overflow-hidden"
                   >
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Min Length</label>
-                        <input
-                          type="number"
-                          value={filters.minLength}
-                          onChange={(e) => setFilters({...filters, minLength: e.target.value})}
-                          className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          placeholder="1"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Max Length</label>
-                        <input
-                          type="number"
-                          value={filters.maxLength}
-                          onChange={(e) => setFilters({...filters, maxLength: e.target.value})}
-                          className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          placeholder="20"
-                        />
-                      </div>
-                    </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-sm text-white/80 mb-2">Min Length</label>
+                            <input
+                              type="number"
+                              value={filters.minLength}
+                              onChange={(e) => setFilters({...filters, minLength: e.target.value})}
+                              className="ios-input"
+                              placeholder="1"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm text-white/80 mb-2">Max Length</label>
+                            <input
+                              type="number"
+                              value={filters.maxLength}
+                              onChange={(e) => setFilters({...filters, maxLength: e.target.value})}
+                              className="ios-input"
+                              placeholder="20"
+                            />
+                          </div>
+                        </div>
                     
-                    <div>
-                      <label className="block text-xs text-gray-600 mb-1">Starts With</label>
-                      <input
-                        type="text"
-                        value={filters.startsWith}
-                        onChange={(e) => setFilters({...filters, startsWith: e.target.value})}
-                        className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        placeholder="e.g., un"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-xs text-gray-600 mb-1">Ends With</label>
-                      <input
-                        type="text"
-                        value={filters.endsWith}
-                        onChange={(e) => setFilters({...filters, endsWith: e.target.value})}
-                        className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        placeholder="e.g., ing"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-xs text-gray-600 mb-1">Contains</label>
-                      <input
-                        type="text"
-                        value={filters.contains}
-                        onChange={(e) => setFilters({...filters, contains: e.target.value})}
-                        className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        placeholder="e.g., tion"
-                      />
-                    </div>
-                    
-                    <button
-                      onClick={handleFilterSearch}
-                      disabled={isSearching}
-                      className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-                    >
-                      Apply Filters
-                    </button>
+                        <div>
+                          <label className="block text-sm text-white/80 mb-2">Starts With</label>
+                          <input
+                            type="text"
+                            value={filters.startsWith}
+                            onChange={(e) => setFilters({...filters, startsWith: e.target.value})}
+                            className="ios-input"
+                            placeholder="e.g., un"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm text-white/80 mb-2">Ends With</label>
+                          <input
+                            type="text"
+                            value={filters.endsWith}
+                            onChange={(e) => setFilters({...filters, endsWith: e.target.value})}
+                            className="ios-input"
+                            placeholder="e.g., ing"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm text-white/80 mb-2">Contains</label>
+                          <input
+                            type="text"
+                            value={filters.contains}
+                            onChange={(e) => setFilters({...filters, contains: e.target.value})}
+                            className="ios-input"
+                            placeholder="e.g., tion"
+                          />
+                        </div>
+                        
+                        <button
+                          onClick={handleFilterSearch}
+                          disabled={isSearching}
+                          className="ios-button w-full"
+                        >
+                          Apply Filters
+                        </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Stats Card (inside center column) */}
+            {/* Stats Card */}
             {wordStats && (
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-gray-900" />
+              <div className="ios-stats">
+                <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-white" />
                   Database Stats
                 </h2>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Total Words:</span>
-                    <span className="font-semibold text-gray-900">{wordStats.total_words.toLocaleString()}</span>
+                <div className="space-y-3">
+                  <div className="ios-stat-item">
+                    <span className="ios-stat-label">Total Words:</span>
+                    <span className="ios-stat-value">{wordStats.total_words.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Average Length:</span>
-                    <span className="font-semibold text-gray-900">{wordStats.avg_length.toFixed(2)} letters</span>
+                  <div className="ios-stat-item">
+                    <span className="ios-stat-label">Average Length:</span>
+                    <span className="ios-stat-value">{wordStats.avg_length.toFixed(2)} letters</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shortest Word:</span>
-                    <span className="font-semibold text-gray-900">{wordStats.min_length} letter</span>
+                  <div className="ios-stat-item">
+                    <span className="ios-stat-label">Shortest Word:</span>
+                    <span className="ios-stat-value">{wordStats.min_length} letter</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Longest Word:</span>
-                    <span className="font-semibold text-gray-900">{wordStats.max_length} letters</span>
+                  <div className="ios-stat-item">
+                    <span className="ios-stat-label">Longest Word:</span>
+                    <span className="ios-stat-value">{wordStats.max_length} letters</span>
                   </div>
                 </div>
               </div>
@@ -347,16 +359,16 @@ const App: React.FC = () => {
 
           </section>
 
-          {/* Right Column (Results) */}
+          {/* Right Column - Results */}
           <section>
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 flex items-center justify-between"
+                className="bg-red-500/20 border border-red-500/30 text-red-100 px-4 py-3 rounded-lg mb-4 flex items-center justify-between backdrop-blur-sm"
               >
                 <span className="text-sm">{error}</span>
-                <button onClick={() => setError(null)} className="text-red-700 hover:text-red-900">
+                <button onClick={() => setError(null)} className="text-red-100 hover:text-white">
                   <X className="w-4 h-4" />
                 </button>
               </motion.div>
@@ -367,39 +379,32 @@ const App: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="bg-white rounded-lg border border-gray-200 p-4 results-card"
+                  className="ios-results"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Results</h3>
-                    <span className="text-xs text-gray-500">{searchResult.filteredWords.length.toLocaleString()} found</span>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-semibold text-white">Results</h3>
+                    <span className="text-sm text-white/80">{searchResult.filteredWords.length.toLocaleString()} found</span>
                   </div>
-                  <div className="border border-gray-200 rounded-md overflow-hidden results-scroll">
-                    <ul className="divide-y divide-gray-200">
-                      {searchResult.filteredWords.slice(0, 500).map((w, idx) => (
-                        <li key={w + idx}>
-                          <button
-                            onClick={() => handleExploreWord(w)}
-                            className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center justify-between"
-                          >
-                            <span className="text-gray-900">{w}</span>
-                            <span className="text-gray-400 text-xs">Explore →</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="ios-results-list">
+                    {searchResult.filteredWords.slice(0, 500).map((w, idx) => (
+                      <div key={w + idx} className="ios-result-item" onClick={() => handleExploreWord(w)}>
+                        <span className="text-white">{w}</span>
+                        <span className="text-white/60 text-xs">Explore →</span>
+                      </div>
+                    ))}
                   </div>
                   {searchResult.filteredWords.length > 500 && (
-                    <p className="mt-3 text-xs text-gray-500">Showing first 500 results. Refine filters to narrow results.</p>
+                    <p className="mt-3 text-xs text-white/60">Showing first 500 results. Refine filters to narrow results.</p>
                   )}
                 </motion.div>
               ) : (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="bg-white rounded-lg border border-gray-200 p-4"
+                  className="ios-results"
                 >
-                  <div className="mb-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Result</h3>
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-white">Result</h3>
                   </div>
                   <WordResults
                     result={searchResult}
@@ -409,20 +414,28 @@ const App: React.FC = () => {
                 </motion.div>
               )
             ) : (
-              <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Start Exploring Words</h3>
-                <p className="text-gray-600 mb-6">
+              <div className="ios-empty">
+                <Search className="w-16 h-16 text-white/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">Start Exploring Words</h3>
+                <p className="text-white/80 mb-6">
                   Search for any word to see definitions, pronunciations, examples, and more.
                 </p>
                 <div className="max-w-md mx-auto">
-                  <p className="text-sm text-gray-500 mb-4">Try searching for:</p>
+                  <p className="text-sm text-white/60 mb-4">Try searching for:</p>
                   <div className="flex flex-wrap gap-2 justify-center">
                     {['serendipity', 'ephemeral', 'eloquent', 'magnificent', 'wonderful'].map((word) => (
                       <button
                         key={word}
-                        onClick={() => runBasicSearch(word)}
-                        className="star-chip"
+                        onClick={() => {
+                          setSearchTerm(word);
+                          setTimeout(() => {
+                            const form = document.querySelector('form');
+                            if (form) {
+                              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                            }
+                          }, 100);
+                        }}
+                        className="ios-chip"
                       >
                         {word}
                       </button>
@@ -431,7 +444,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-            </section>
+          </section>
         </div>
       </main>
     </div>

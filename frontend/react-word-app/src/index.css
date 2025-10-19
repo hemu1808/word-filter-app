@@ -172,169 +172,360 @@ textarea:focus {
 }
 
 /* ==========================
-   Starfall Theme (Landing)
+   iOS 26 Glassmorphism Theme
    ========================== */
-.starfall-page {
+.ios-page {
   min-height: 100vh;
-  background: #87CEEB;
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25) 0%, transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 55%),
-    radial-gradient(circle at 40% 60%, rgba(255,255,255,0.12) 0%, transparent 55%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.starfall-header {
-  background: #1E3A8A; /* dark blue */
+.ios-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ios-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.starfall-header .nav-item {
-  font-weight: 600;
-  padding: 0.5rem 0.75rem;
-  border-radius: 9999px;
+.ios-header .nav-item {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
-.starfall-header .nav-item:hover {
-  background: rgba(255,255,255,0.12);
+.ios-header .nav-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
-.starfall-logo {
-  font-family: 'Fredoka', 'Inter', sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  font-size: 1.5rem;
+.ios-logo {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.starfall-main {
-  max-width: 1400px;
+.ios-main {
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 1.75rem;
-  min-height: calc(100vh - 64px);
+  padding: 2rem 1.5rem;
+  min-height: calc(100vh - 80px);
+  position: relative;
+  z-index: 1;
 }
 
-.starfall-columns {
+.ios-columns {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr) 380px;
-  gap: 0.75rem;
+  grid-template-columns: 320px minmax(0, 1fr) 400px;
+  gap: 2rem;
+  align-items: start;
 }
 
-@media (max-width: 1024px) {
-  .starfall-columns {
+@media (max-width: 1200px) {
+  .ios-columns {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
-.starfall-panel {
-  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
-  border: 2px solid #1E3A8A;
-  border-radius: 16px;
-  padding: 1rem 0.75rem;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+.ios-panel {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 0;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.starfall-panel-title {
-  background: #1E3A8A;
+.ios-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.ios-panel-title {
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  font-weight: 800;
-  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  font-weight: 600;
+  font-size: 1.125rem;
   text-align: center;
-  border-radius: 12px;
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 0.75rem;
-  box-shadow: inset 0 -2px 0 rgba(255,255,255,0.2);
+  padding: 1rem 1.5rem;
+  margin: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.starfall-grid {
+.ios-panel-content {
+  padding: 1.5rem;
+}
+
+.ios-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
-.starfall-activity {
+.ios-activity {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background: #E0F2FE;
-  border: 2px solid #1E3A8A;
-  border-radius: 14px;
-  padding: 0.75rem;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1rem;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.starfall-activity:hover { 
+.ios-activity:hover { 
   transform: translateY(-2px);
-  box-shadow: 0 8px 14px rgba(0,0,0,0.16);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.starfall-activity .icon {
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
-  width: 2.25rem;
-  height: 2.25rem;
+.ios-activity .icon {
+  font-size: 1.5rem;
+  width: 3rem;
+  height: 3rem;
   display: grid;
   place-items: center;
-  background: #FDE68A; /* amber 300 */
-  border: 2px solid #1E3A8A;
-  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.starfall-activity .title {
-  font-weight: 800;
-  color: #1E3A8A;
+.ios-activity .title {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1rem;
 }
 
-.starfall-activity .subtitle {
-  font-size: 0.85rem;
-  color: #0f172a;
+.ios-activity .subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.25rem;
+}
+
+/* iOS-style inputs and buttons */
+.ios-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.ios-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ios-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+.ios-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 0.875rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.ios-button:hover { 
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.ios-button:disabled { 
+  opacity: 0.5; 
+  transform: none; 
+  cursor: not-allowed;
+}
+
+.ios-chip {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ios-chip:hover { 
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Results area with glassmorphism */
+.ios-results {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ios-results-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ios-results-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ios-results-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.ios-results-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.ios-results-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.ios-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.ios-result-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ios-result-item:last-child {
+  border-bottom: none;
+}
+
+/* Stats with glassmorphism */
+.ios-stats {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.ios-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.ios-stat-item:last-child {
+  border-bottom: none;
+}
+
+.ios-stat-label {
+  font-size: 0.875rem;
   opacity: 0.8;
 }
 
-/* Results area fills viewport and scrolls only list */
-.results-card {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 220px);
+.ios-stat-value {
+  font-weight: 600;
+  font-size: 1rem;
 }
 
-.results-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
+/* Empty state */
+.ios-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* Starfall inputs and buttons */
-.star-input {
-  width: 100%;
-  border: 2px solid #1E3A8A;
-  border-radius: 12px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.95rem;
-}
-.star-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(30,58,138,0.2);
-}
-
-.star-button {
-  background: #1E3A8A;
+.ios-empty h3 {
   color: #fff;
-  border: 2px solid #1E3A8A;
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  font-weight: 700;
-  transition: transform 0.15s ease;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
-.star-button:hover { transform: translateY(-1px); }
-.star-button:disabled { opacity: 0.6; transform: none; }
 
-.star-chip {
-  background: #E0F2FE;
-  color: #1E3A8A;
-  border: 2px solid #1E3A8A;
-  border-radius: 9999px;
-  padding: 0.25rem 0.6rem;
-  font-weight: 700;
-  font-size: 0.8rem;
+.ios-empty p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
 }
-.star-chip:hover { background: #cfe9fb; }
