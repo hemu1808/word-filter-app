@@ -172,19 +172,58 @@ textarea:focus {
 }
 
 /* ==========================
-   Kid-Friendly Theme
+   Magical Multi-Theme System
    ========================== */
+
+/* Base Theme */
 .kid-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   background-attachment: fixed;
   position: relative;
   overflow-x: hidden;
-  transition: all 0.3s ease;
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Ocean Theme */
+.kid-page.ocean {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 25%, #0369a1 50%, #0c4a6e 75%, #082f49 100%);
+}
+
+/* Forest Theme */
+.kid-page.forest {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 25%, #15803d 50%, #166534 75%, #14532d 100%);
+}
+
+/* Space Theme */
+.kid-page.space {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #4c1d95 50%, #581c87 75%, #7c2d12 100%);
+}
+
+/* Sunset Theme */
+.kid-page.sunset {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 25%, #dc2626 50%, #b91c1c 75%, #991b1b 100%);
+}
+
+/* Rainbow Theme */
+.kid-page.rainbow {
+  background: linear-gradient(135deg, #ef4444 0%, #f97316 16%, #eab308 32%, #22c55e 48%, #3b82f6 64%, #8b5cf6 80%, #ec4899 100%);
+  animation: rainbowShift 10s ease-in-out infinite;
+}
+
+/* Dark Theme */
 .kid-page.dark {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* Witch Theme */
+.kid-page.witch {
+  background: linear-gradient(135deg, #581c87 0%, #7c2d12 25%, #991b1b 50%, #1f2937 75%, #000000 100%);
+}
+
+@keyframes rainbowShift {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(180deg); }
 }
 
 .kid-page::before {
@@ -947,12 +986,150 @@ textarea:focus {
 @keyframes pageLoad {
   0% { 
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) scale(0.95);
   }
   100% { 
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+/* Witch-like transition effects */
+@keyframes witchTransition {
+  0% { 
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+  25% { 
+    opacity: 0.8;
+    transform: scale(1.05) rotate(2deg);
+    filter: blur(1px);
+  }
+  50% { 
+    opacity: 0.6;
+    transform: scale(0.95) rotate(-2deg);
+    filter: blur(2px);
+  }
+  75% { 
+    opacity: 0.8;
+    transform: scale(1.02) rotate(1deg);
+    filter: blur(1px);
+  }
+  100% { 
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+/* Aurora effect */
+@keyframes aurora {
+  0%, 100% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
+  }
+  25% { 
+    background-position: 100% 50%;
+    filter: hue-rotate(90deg);
+  }
+  50% { 
+    background-position: 0% 50%;
+    filter: hue-rotate(180deg);
+  }
+  75% { 
+    background-position: 100% 50%;
+    filter: hue-rotate(270deg);
+  }
+}
+
+/* Fireflies animation */
+@keyframes fireflies {
+  0%, 100% { 
+    opacity: 0;
+    transform: translateY(0px) scale(0.5);
+  }
+  50% { 
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+}
+
+/* Stars twinkling */
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Rain effect */
+@keyframes rain {
+  0% { 
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% { 
+    opacity: 1;
+  }
+  90% { 
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Magical sparkles */
+@keyframes sparkles {
+  0% { 
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+/* Theme-specific effects */
+.kid-page.ocean::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15zm15 0c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z'/%3E%3C/g%3E%3C/svg%3E");
+  animation: floatPattern 20s linear infinite;
+}
+
+.kid-page.forest::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 40c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm20 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E");
+  animation: floatPattern 25s linear infinite;
+}
+
+.kid-page.space::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='2'/%3E%3Ccircle cx='80' cy='20' r='1'/%3E%3Ccircle cx='50' cy='50' r='1.5'/%3E%3Ccircle cx='20' cy='80' r='1'/%3E%3Ccircle cx='80' cy='80' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.kid-page.sunset::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M60 60c0-16.6-13.4-30-30-30s-30 13.4-30 30 13.4 30 30 30 30-13.4 30-30zm30 0c0-16.6-13.4-30-30-30s-30 13.4-30 30 13.4 30 30 30 30-13.4 30-30z'/%3E%3C/g%3E%3C/svg%3E");
+  animation: aurora 8s ease-in-out infinite;
+}
+
+.kid-page.witch::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M30 30c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15zm15 0c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z'/%3E%3C/g%3E%3C/svg%3E");
+  animation: witchTransition 4s ease-in-out infinite;
 }
 
 /* Enhanced focus states */

@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader, Menu, Sun, Moon } from 'lucide-react';
+import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader, Menu, Sun, Moon, Palette } from 'lucide-react';
 import { wordService } from './services/WordService';
 import type { SearchResult, WordStats } from './types/WordTypes';
 import WordResults from './components/WordResults';
 import FloatingParticles from './components/FloatingParticles';
+import MagicalEffects from './components/MagicalEffects';
+import ThemeSelector from './components/ThemeSelector';
+import useSound from './hooks/useSound';
 
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +17,9 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('default');
+  const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false);
+  const { playSound } = useSound();
   const [filters, setFilters] = useState({
     minLength: '',
     maxLength: '',
@@ -39,11 +45,13 @@ const App: React.FC = () => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
 
+    playSound('magic');
     setIsSearching(true);
     setError(null);
     try {
       const result = await wordService.searchBasicWord(searchTerm.trim());
       setSearchResult(result);
+      playSound('success');
     } catch (err: any) {
       console.error('Search failed:', err);
       setError(err.response?.data?.detail || 'Search failed. Please try again.');
@@ -97,26 +105,47 @@ const App: React.FC = () => {
     handleSearch({ preventDefault: () => {} } as React.FormEvent);
   };
 
+  const handleThemeChange = (theme: string) => {
+    playSound('theme');
+    setCurrentTheme(theme);
+    if (theme === 'dark') {
+      setIsDarkMode(true);
+    } else {
+      setIsDarkMode(false);
+    }
+  };
+
   return (
-    <div className={`kid-page ${isDarkMode ? 'dark' : ''}`}>
+    <div className={`kid-page ${currentTheme} ${isDarkMode ? 'dark' : ''}`}>
       <FloatingParticles />
-      {/* Kid-Friendly Header */}
+      <MagicalEffects theme={currentTheme} />
+      {/* Magical Header */}
       <header className="kid-header">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-black/10 transition-all" aria-label="Back">
+            <motion.button 
+              className="p-2 rounded-full hover:bg-black/10 transition-all" 
+              aria-label="Back"
+              whileHover={{ scale: 1.1, rotate: -5 }}
+              whileTap={{ scale: 0.9 }}
+            >
               <span className="text-2xl">←</span>
-            </button>
-            <div className="kid-logo">Word★Explorer</div>
+            </motion.button>
+            <motion.div 
+              className="kid-logo"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              Word★Explorer
+            </motion.div>
           </div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="theme-toggle"
-            >
-              {isDarkMode ? <Sun className="w-4 h-4 mr-1" /> : <Moon className="w-4 h-4 mr-1" />}
-              {isDarkMode ? 'Light' : 'Dark'}
-            </button>
+            <ThemeSelector
+              currentTheme={currentTheme}
+              onThemeChange={handleThemeChange}
+              isOpen={isThemeSelectorOpen}
+              onToggle={() => setIsThemeSelectorOpen(!isThemeSelectorOpen)}
+            />
             <nav className="hidden md:flex items-center gap-3">
               <button className="nav-item">Apps</button>
               <button className="nav-item">Store</button>
@@ -219,6 +248,7 @@ const App: React.FC = () => {
                     <button
                       key={word}
                       onClick={() => {
+                        playSound('click');
                         setSearchTerm(word);
                         setTimeout(() => {
                           const form = document.querySelector('form');
