@@ -94,11 +94,11 @@ async def log_requests(request: Request, call_next):
         )
         raise
 
-# Configure CORS to allow Angular frontend
+# Configure CORS to allow React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200", "http://localhost:4201"],  # Angular dev server
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=False,  # Must be False when using wildcard
     allow_methods=["*"],
     allow_headers=["*"],
 )
