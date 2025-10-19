@@ -324,9 +324,8 @@ const App: React.FC = () => {
                 )}
               </AnimatePresence>
             </div>
-          </section>
 
-            {/* Stats Card */}
+            {/* Stats Card (inside center column) */}
             {wordStats && (
               <div className="bg-white rounded-lg border border-gray-200 p-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
@@ -353,7 +352,10 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
+
+          </section>
+
+          </section>
 
           {/* Right Column (Results) */}
           <section>
