@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader } from 'lucide-react';
+import { Search, Filter, BookOpen, TrendingUp, X, ChevronDown, Loader, Menu } from 'lucide-react';
 import { wordService } from './services/WordService';
 import type { SearchResult, WordStats } from './types/WordTypes';
 import WordResults from './components/WordResults';
@@ -96,42 +96,90 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Compact Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <BookOpen className="w-6 h-6 text-gray-900" />
-              <h1 className="text-xl font-bold text-gray-900 tracking-tight">Word Explorer</h1>
-            </div>
-            
-            {/* Stats Bar */}
-            {wordStats && (
-              <div className="hidden md:flex items-center space-x-6 text-sm text-gray-700">
-                <div className="flex items-center space-x-2">
-                  <span>Total Words</span>
-                  <span className="font-semibold text-gray-900">{wordStats.total_words.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span>Avg Length</span>
-                  <span className="font-semibold text-gray-900">{wordStats.avg_length.toFixed(1)}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span>Range</span>
-                  <span className="font-semibold text-gray-900">{wordStats.min_length}-{wordStats.max_length}</span>
-                </div>
-              </div>
-            )}
+    <div className="starfall-page">
+      {/* Starfall Header */}
+      <header className="starfall-header sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button className="p-2 rounded-full hover:bg-white/10" aria-label="Back">←</button>
+            <div className="starfall-logo">Word★Explorer</div>
           </div>
+          <nav className="hidden md:flex items-center gap-2">
+            <button className="nav-item">Apps</button>
+            <button className="nav-item">Store</button>
+            <button className="nav-item">Parents & Teachers</button>
+            <button className="nav-item">How to Join</button>
+            <button className="nav-item">Sign In</button>
+          </nav>
+          <button className="md:hidden p-2 rounded hover:bg-white/10" aria-label="Menu">
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
-      {/* Main Content - Two Column Layout */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Left Sidebar - Search & Filters */}
-          <div className="lg:col-span-1 space-y-4">
+      {/* Starfall Main */}
+      <main className="starfall-main">
+        <h2 className="starfall-panel-title mb-4">Grades 1, 2, 3 — Language Arts & Music</h2>
+        <div className="starfall-columns">
+          {/* Left Column (Math-like panel repurposed to Filters) */}
+          <aside className="starfall-panel">
+            <div className="starfall-panel-title">Tools</div>
+            <div className="starfall-grid">
+              <button className="starfall-activity" onClick={() => setShowFilters((v) => !v)}>
+                <span className="icon">⚙️</span>
+                <div>
+                  <div className="title">Advanced Filters</div>
+                  <div className="subtitle">Length, pattern, contains</div>
+                </div>
+              </button>
+              <button className="starfall-activity" onClick={() => {
+                const sample = ['serendipity','galaxy','harmony','magnificent'];
+                setSearchTerm(sample[Math.floor(Math.random()*sample.length)]);
+                setTimeout(() => document.querySelector('form')?.dispatchEvent(new Event('submit', {cancelable:true,bubbles:true})), 50);
+              }}>
+                <span className="icon">🎲</span>
+                <div>
+                  <div className="title">Surprise Me</div>
+                  <div className="subtitle">Search a random word</div>
+                </div>
+              </button>
+            </div>
+          </aside>
+          {/* Center Column (Activities: Basic/Advanced/Browse/Puzzles) + Search */}
+          <section className="space-y-4">
+            <div className="starfall-panel">
+              <div className="starfall-panel-title">Activities</div>
+              <div className="grid sm:grid-cols-2 gap-2">
+                <button className="starfall-activity" onClick={(e) => { e.preventDefault(); }}>
+                  <span className="icon">🔍</span>
+                  <div>
+                    <div className="title">Basic Search</div>
+                    <div className="subtitle">Look up any word</div>
+                  </div>
+                </button>
+                <button className="starfall-activity" onClick={() => setShowFilters(true)}>
+                  <span className="icon">🎯</span>
+                  <div>
+                    <div className="title">Advanced</div>
+                    <div className="subtitle">Smart filtering</div>
+                  </div>
+                </button>
+                <button className="starfall-activity" onClick={() => setFilters({ ...filters, minLength: '5', maxLength: '7' })}>
+                  <span className="icon">📚</span>
+                  <div>
+                    <div className="title">Browse by Length</div>
+                    <div className="subtitle">Quick presets</div>
+                  </div>
+                </button>
+                <button className="starfall-activity" onClick={() => setFilters({ ...filters, contains: 'tion' })}>
+                  <span className="icon">🧩</span>
+                  <div>
+                    <div className="title">Pattern Match</div>
+                    <div className="subtitle">Find by pattern</div>
+                  </div>
+                </button>
+              </div>
+            </div>
             {/* Search Card */}
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
@@ -276,6 +324,7 @@ const App: React.FC = () => {
                 )}
               </AnimatePresence>
             </div>
+          </section>
 
             {/* Stats Card */}
             {wordStats && (
@@ -306,8 +355,8 @@ const App: React.FC = () => {
             )}
           </div>
 
-          {/* Right Content Area - Results */}
-          <div className="lg:col-span-2">
+          {/* Right Column (Results) */}
+          <section>
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -398,9 +447,9 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
+            </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

@@ -170,3 +170,111 @@ textarea:focus {
     padding: 0.75rem;
   }
 }
+
+/* ==========================
+   Starfall Theme (Landing)
+   ========================== */
+.starfall-page {
+  min-height: 100vh;
+  background: #87CEEB;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(255,255,255,0.15) 0%, transparent 50%);
+}
+
+.starfall-header {
+  background: #1E3A8A; /* dark blue */
+  color: #fff;
+}
+
+.starfall-header .nav-item {
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.starfall-header .nav-item:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.starfall-logo {
+  font-family: 'Fredoka', 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  font-size: 1.5rem;
+}
+
+.starfall-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.starfall-columns {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .starfall-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.starfall-panel {
+  background: rgba(255,255,255,0.6);
+  border: 2px solid #1E3A8A;
+  border-radius: 16px;
+  padding: 1rem 0.75rem;
+}
+
+.starfall-panel-title {
+  background: #1E3A8A;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-align: center;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.starfall-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.starfall-activity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #E0F2FE;
+  border: 2px solid #1E3A8A;
+  border-radius: 14px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.starfall-activity:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.12);
+}
+
+.starfall-activity .icon {
+  font-size: 1.75rem;
+}
+
+.starfall-activity .title {
+  font-weight: 800;
+  color: #1E3A8A;
+}
+
+.starfall-activity .subtitle {
+  font-size: 0.85rem;
+  color: #0f172a;
+  opacity: 0.8;
+}
