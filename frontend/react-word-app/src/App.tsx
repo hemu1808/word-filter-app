@@ -375,14 +375,14 @@ const App: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="bg-white rounded-lg border border-gray-200 p-4"
+                  className="bg-white rounded-lg border border-gray-200 p-4 results-card"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">Results</h3>
                     <span className="text-xs text-gray-500">{searchResult.filteredWords.length.toLocaleString()} found</span>
                   </div>
-                  <div className="border border-gray-200 rounded-md overflow-hidden">
-                    <ul className="divide-y divide-gray-200 max-h-[70vh] overflow-auto">
+                  <div className="border border-gray-200 rounded-md overflow-hidden results-scroll">
+                    <ul className="divide-y divide-gray-200">
                       {searchResult.filteredWords.slice(0, 500).map((w, idx) => (
                         <li key={w + idx}>
                           <button

@@ -206,15 +206,16 @@ textarea:focus {
 }
 
 .starfall-main {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 2rem;
+  padding: 1.25rem 1rem 1.75rem;
+  min-height: calc(100vh - 64px);
 }
 
 .starfall-columns {
   display: grid;
-  grid-template-columns: 260px 1fr 260px;
-  gap: 1rem;
+  grid-template-columns: 240px minmax(0, 1fr) 380px;
+  gap: 0.75rem;
 }
 
 @media (max-width: 1024px) {
@@ -234,7 +235,7 @@ textarea:focus {
   background: #1E3A8A;
   color: #fff;
   font-weight: 800;
-  font-size: 1.5rem;
+  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
   text-align: center;
   border-radius: 12px;
   padding: 0.5rem 0.75rem;
@@ -243,8 +244,8 @@ textarea:focus {
 
 .starfall-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
 }
 
 .starfall-activity {
@@ -265,7 +266,7 @@ textarea:focus {
 }
 
 .starfall-activity .icon {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
 }
 
 .starfall-activity .title {
@@ -277,4 +278,17 @@ textarea:focus {
   font-size: 0.85rem;
   color: #0f172a;
   opacity: 0.8;
+}
+
+/* Results area fills viewport and scrolls only list */
+.results-card {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 220px);
+}
+
+.results-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
