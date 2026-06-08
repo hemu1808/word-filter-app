@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY main_s3.py main.py
+COPY main.py .
 COPY word_manager.py .
 COPY words.txt . 
 

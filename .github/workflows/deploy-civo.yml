@@ -47,8 +47,8 @@ on:
     paths:
       - 'civo-terraform/**'
       - 'civo-k8s/**'
-      - 'backend/main_civo.py'
-      - 'backend/word_manager_civo.py'
+      - 'backend/main.py'
+      - 'backend/word_manager.py'
       - '.github/workflows/deploy-civo.yml'
 
 env:
