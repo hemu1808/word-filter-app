@@ -139,17 +139,6 @@ Trigger via GitHub Actions:
 # Supports multiple environments and deployment types
 ```
 
-### Method 4: Multi-Cloud Deployment
-
-Deploy to both AWS and Civo simultaneously:
-
-```bash
-# Deploy to both clouds
-.\scripts\deploy-multi-cloud.ps1 -CloudProvider both -Environment prod
-
-# Deploy only to Civo
-.\scripts\deploy-multi-cloud.ps1 -CloudProvider civo -Environment prod
-```
 
 ## 🌍 Regional Options
 

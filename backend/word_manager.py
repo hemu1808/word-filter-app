@@ -34,7 +34,7 @@ class WordManager:
             use_object_storage = os.getenv("USE_OBJECT_STORAGE", "false").lower() == "true"
             storage_type = os.getenv("STORAGE_TYPE", "auto")
             
-            if use_object_storage or storage_type in ["civo", "s3", "aws"]:
+            if use_object_storage or storage_type in ["civo", "s3"]:
                 self._init_object_store()
             else:
                 self._init_file_storage()
@@ -51,11 +51,10 @@ class WordManager:
             access_key = os.getenv("AWS_ACCESS_KEY_ID", "")
             secret_key = os.getenv("AWS_SECRET_ACCESS_KEY", "")
             
-            # If no custom endpoint is specified, default to standard AWS S3
+            # Set up custom endpoint URL if specified (required for S3-compatible storage like Civo)
             kwargs = {}
             if endpoint_url:
                 kwargs['endpoint_url'] = endpoint_url
-                # Standard configuration for S3-compatible custom endpoints (like Civo)
                 kwargs['config'] = boto3.session.Config(
                     signature_version='s3v4',
                     s3={'addressing_style': 'virtual'}
@@ -79,7 +78,7 @@ class WordManager:
             self.storage_type = "object_store"
             
             self.storage_info = {
-                "provider": "civo" if "civo" in endpoint_url else "aws_s3",
+                "provider": "civo" if "civo" in endpoint_url else "s3_compatible",
                 "type": "object_store",
                 "endpoint": endpoint_url or "s3.amazonaws.com",
                 "region": region,
@@ -88,7 +87,7 @@ class WordManager:
                 "connected": True
             }
             
-            logger.info(f"Initialized Object Store: {endpoint_url or 'AWS'} / {self.bucket_name}")
+            logger.info(f"Initialized Object Store: {endpoint_url or 'S3'} / {self.bucket_name}")
             
         except Exception as e:
             logger.error(f"Failed to initialize Object Store: {e}")

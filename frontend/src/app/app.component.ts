@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { trigger, state, style, transition, animate, query, stagger, animateChild, group } from '@angular/animations';
-import { WordService, BasicSearchResult, AddWordResponse } from './services/word.service';
+import { trigger, state, style, transition, animate, query, stagger } from '@angular/animations';
+import { WordService, BasicSearchResult } from './services/word.service';
 import { WordFilter, WordStats } from './models/word.model';
 
 @Component({
@@ -51,50 +51,54 @@ import { WordFilter, WordStats } from './models/word.model';
 export class AppComponent implements OnInit {
   title = 'Word Explorer';
   
-  // Basic search properties
+  // ==========================================
+  // STATE PROPERTIES
+  // ==========================================
+  
+  /** Basic search properties */
   searchWord = '';
   searchResult: BasicSearchResult | null = null;
   isSearching = false;
   searchError = '';
 
-  // Word stats and UI
+  /** Word statistics and performance */
   wordStats: WordStats | null = null;
   performanceStats: any = null;
   performanceStatsVisible = false;
 
-  // Kid-friendly quick suggestions
+  /** Quick suggestions for standard search */
   quickSuggestions = [
     'butterfly', 'rainbow', 'adventure', 'magic', 'dinosaur', 
     'unicorn', 'treasure', 'mystery', 'friendship', 'courage'
   ];
 
-  // Advanced filter properties (kept for compatibility)
+  /** Advanced filter properties */
   filterForm: FormGroup;
   words: string[] = [];
   loading = false;
   error = '';
 
-  // Interactive tab properties (kept for compatibility)
+  /** Interactive tab properties */
   interactiveWordLength: number | null = null;
   letterBoxes: string[] = [];
   interactiveWords: string[] = [];
   interactiveLoading = false;
   interactiveError = '';
   
-  // Puzzle solver properties (kept for compatibility)
-  puzzleLength: number = 5;
-  puzzlePattern: string = '';
+  /** Puzzle solver properties */
+  puzzleLength = 5;
+  puzzlePattern = '';
 
-  // Browse by length properties
-  browseLength: number = 5;
+  /** Browse by length properties */
+  browseLength = 5;
   browseWords: string[] = [];
   browseLoading = false;
   browseError = '';
 
-  // Theme properties
+  /** Theme configurations */
   isDarkMode = false;
 
-  // Legacy properties (kept for compatibility)
+  /** UI state managers */
   searchMode: 'basic' | 'advanced' | 'puzzle' | 'browse' = 'basic';
   statsPanelExpanded = false;
   searchToggleExpanded = false;
@@ -120,20 +124,42 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // ==========================================
+  // LIFECYCLE HOOKS
+  // ==========================================
+
   ngOnInit() {
+    // Initialize theme based on storage or OS preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      this.isDarkMode = savedTheme === 'dark';
+    } else {
+      this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+
     this.loadWordStats();
-    this.searchWords(); // Load initial words
-    this.startTicker();
+    this.searchWords(); 
+    this.onPuzzleLengthChange(); 
   }
 
-  // New kid-friendly methods
+  // ==========================================
+  // CORE SEARCH LOGIC
+  // ==========================================
+
+  /**
+   * Sets the active search mode tabs.
+   * @param mode Selected search mode
+   */
   setSearchMode(mode: 'basic' | 'advanced' | 'puzzle' | 'browse') {
     this.searchMode = mode;
     this.showNotification(`Switched to ${mode} mode`, 'info');
   }
 
+  /**
+   * Clears state values when the search query input changes.
+   */
   onSearchInput() {
-    // Clear previous results when typing
     if (this.searchResult) {
       this.searchResult = null;
     }
@@ -142,52 +168,39 @@ export class AppComponent implements OnInit {
     }
   }
 
-  loadWordStats() {
-    console.log('Loading word stats...'); // Debug
-    this.wordService.getWordStats().subscribe({
-      next: (stats) => {
-        console.log('Word stats loaded:', stats); // Debug
-        this.wordStats = stats;
-        this.updateTickerItems();
+  /**
+   * Executes a basic word search query with Oxford Dictionary lookup.
+   */
+  searchWordBasic() {
+    if (!this.searchWord || this.searchWord.trim() === '') {
+      return;
+    }
+
+    this.isSearching = true;
+    this.searchError = '';
+    this.searchResult = null;
+
+    this.wordService.searchBasicWord(this.searchWord.trim()).subscribe({
+      next: (result) => {
+        this.searchResult = result;
+        this.isSearching = false;
+        if (result.oxford || result.inCollection) {
+          this.showNotification(`Found details for "${result.word}"!`, 'success');
+        } else {
+          this.showNotification(`No Oxford details found for "${result.word}".`, 'info');
+        }
       },
       error: (error) => {
-        console.error('Error loading word stats:', error);
-        this.error = 'Failed to load word statistics';
-        this.showNotification('Failed to load word statistics', 'error');
+        this.searchError = 'Error searching for word: ' + error.message;
+        this.isSearching = false;
+        this.showNotification('Error searching for word. Check backend connection.', 'error');
       }
     });
   }
 
-  updateTickerItems() {
-    if (this.wordStats) {
-      this.tickerItems = [
-        `📚 ${this.wordStats.total_words.toLocaleString()} Total Words`,
-        `📏 Length Range: ${this.wordStats.min_length}-${this.wordStats.max_length} letters`,
-        `📊 Average Length: ${this.wordStats.avg_length} letters`,
-        `🎯 Database Status: Active`,
-        `✨ Oxford Dictionary: Integrated`,
-        `🔍 Search Modes: Basic & Advanced & Puzzle`,
-        `🧩 Puzzle Solver: Available`,
-        `💡 Live Updates: Enabled`,
-        `⚡ Real-time Search`,
-        `🌟 Material Design UI`
-      ];
-    }
-  }
-
-  startTicker() {
-    // Ticker now uses CSS animation, no interval needed
-  }
-
-  showNotification(message: string, type: 'success' | 'error' | 'info' = 'info') {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: [`snackbar-${type}`]
-    });
-  }
-
+  /**
+   * Executes an advanced search filtering query.
+   */
   searchWords() {
     this.loading = true;
     this.error = '';
@@ -195,7 +208,6 @@ export class AppComponent implements OnInit {
     const filterValues = this.filterForm.value;
     const filter: WordFilter = {};
 
-    // Only add non-empty values to the filter
     Object.keys(filterValues).forEach(key => {
       const value = filterValues[key];
       if (value !== null && value !== '' && value !== undefined) {
@@ -216,19 +228,64 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /**
+   * Adds the specified word to the database collection.
+   * @param word Word string to add
+   */
+  addWordToCollection(word: string) {
+    if (!word || word.trim() === '') {
+      return;
+    }
+
+    this.wordService.addWordWithValidation(word.trim()).subscribe({
+      next: (response) => {
+        if (response.success) {
+          if (this.searchResult) {
+            this.searchResult.inCollection = true;
+          }
+          
+          if (response.was_new) {
+            this.showNotification(`"${word}" added to your collection! (New word)`, 'success');
+          } else {
+            this.showNotification(`"${word}" was already in your collection.`, 'info');
+          }
+          this.loadWordStats();
+        } else {
+          this.searchError = response.message;
+          this.showNotification(response.message, 'error');
+        }
+      },
+      error: (error) => {
+        console.error('Error adding word:', error);
+        this.searchError = 'Error adding word to collection: ' + error.message;
+        this.showNotification('Error adding word to collection', 'error');
+      }
+    });
+  }
+
+  /**
+   * Clears advanced search form filters.
+   */
   clearFilters() {
     this.filterForm.reset();
     this.filterForm.patchValue({ limit: 100 });
     this.searchWords();
   }
 
+  /**
+   * Auto-searches when inputs in the advanced filter form change.
+   */
   onFilterChange() {
-    // Auto-search when filters change
     this.searchWords();
   }
 
+  // ==========================================
+  // INTERACTIVE PUZZLE SOLVER
+  // ==========================================
 
-  // Interactive tab methods
+  /**
+   * Handles interactive word length transitions.
+   */
   onWordLengthChange() {
     if (this.interactiveWordLength && this.interactiveWordLength > 0) {
       this.letterBoxes = new Array(this.interactiveWordLength).fill('');
@@ -239,7 +296,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Puzzle solver methods
+  /**
+   * Reinitializes letter input blocks based on active puzzle length.
+   */
   onPuzzleLengthChange() {
     if (this.puzzleLength && this.puzzleLength > 0) {
       this.letterBoxes = new Array(this.puzzleLength).fill('');
@@ -250,14 +309,17 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /**
+   * Tracks characters dynamically based on pattern input.
+   */
   onPuzzlePatternChange() {
-    // Update letter boxes based on pattern
     if (this.puzzlePattern && this.puzzleLength) {
       this.letterBoxes = this.puzzlePattern.split('').slice(0, this.puzzleLength);
-      // Pad with empty strings if pattern is shorter than length
       while (this.letterBoxes.length < this.puzzleLength) {
         this.letterBoxes.push('');
       }
+    } else {
+      this.onPuzzleLengthChange();
     }
   }
 
@@ -268,27 +330,25 @@ export class AppComponent implements OnInit {
     return '?????';
   }
 
-
+  /**
+   * Updates letter inputs for specific puzzle boxes.
+   */
   updateLetter(index: number, event: any) {
     const inputValue = event.target.value;
-    
-    // Clean the input: only letters, single character, lowercase for backend
     let cleanValue = inputValue.replace(/[^a-zA-Z]/g, '').toLowerCase();
     
-    // Ensure only one character
     if (cleanValue.length > 1) {
       cleanValue = cleanValue.charAt(0);
     }
     
-    // Update the specific index in the array
     this.letterBoxes[index] = cleanValue;
-    
-    // Force the input to show the correct value immediately
     event.target.value = cleanValue.toUpperCase();
   }
 
+  /**
+   * Runs the pattern solver lookup in the backend.
+   */
   findMatchingWords() {
-    // Use puzzleLength for puzzle solver
     const wordLength = this.puzzleLength || this.interactiveWordLength;
     
     if (!wordLength || this.letterBoxes.length === 0) {
@@ -300,7 +360,6 @@ export class AppComponent implements OnInit {
     this.interactiveLoading = true;
     this.interactiveError = '';
 
-    // Create pattern for the interactive search
     const pattern = this.letterBoxes.map(letter => letter || '?').join('');
     
     this.wordService.getInteractiveWords(wordLength, pattern).subscribe({
@@ -316,13 +375,16 @@ export class AppComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error finding interactive words:', error);
-        this.interactiveError = 'Failed to find words. Make sure the backend is running.';
+        this.interactiveError = 'Failed to find words. Check backend.';
         this.interactiveLoading = false;
         this.showNotification('Failed to find words. Check backend connection.', 'error');
       }
     });
   }
 
+  /**
+   * Clears state values from the interactive puzzle solver panel.
+   */
   clearInteractive() {
     this.interactiveWordLength = null;
     this.puzzleLength = 5;
@@ -334,40 +396,16 @@ export class AppComponent implements OnInit {
     this.showNotification('Puzzle solver cleared', 'info');
   }
 
-  trackByIndex(index: number, item: any): number {
-    return index;
-  }
-
-  // New tracking method for words
-  trackByWord(index: number, word: string): string {
-    return word;
-  }
-
-  getCurrentPattern(): string {
-    return this.letterBoxes.map(l => l || '?').join('').toUpperCase();
-  }
-
-  // Highlight position functionality for better UX
-  highlightPosition(index: number) {
-    // Add visual highlighting logic if needed
-    console.log(`Highlighting position ${index + 1}`);
-  }
-
-  unhighlightPosition(index: number) {
-    // Remove visual highlighting logic if needed
-    console.log(`Unhighlighting position ${index + 1}`);
-  }
-
-  // Random example functionality
+  /**
+   * Randomizes the query character array inside the puzzle grid.
+   */
   randomizePattern() {
     if (!this.puzzleLength || this.puzzleLength <= 0) {
       this.puzzleLength = 5;
     }
 
-    // Generate a random pattern with some known letters
     const letters = 'abcdefghijklmnopqrstuvwxyz';
-    const pattern = Array.from({ length: this.puzzleLength }, (_, i) => {
-      // 30% chance of having a known letter, 70% chance of being unknown
+    const pattern = Array.from({ length: this.puzzleLength }, () => {
       return Math.random() < 0.3 ? letters[Math.floor(Math.random() * letters.length)] : '?';
     }).join('');
 
@@ -377,181 +415,116 @@ export class AppComponent implements OnInit {
     this.showNotification('Random pattern generated!', 'info');
   }
 
-  copyWordToClipboard(word: string) {
-    navigator.clipboard.writeText(word).then(() => {
-      console.log('Word copied to clipboard:', word);
-      this.showNotification(`"${word}" copied to clipboard!`, 'success');
-    }).catch(() => {
-      console.error('Failed to copy word to clipboard');
-      this.showNotification('Failed to copy to clipboard', 'error');
-    });
+  getCurrentPattern(): string {
+    return this.letterBoxes.map(l => l || '?').join('').toUpperCase();
   }
 
-  exploreWord(word: string) {
-    // Switch to basic search mode and search for the word
-    this.searchMode = 'basic';
-    this.searchWord = word;
-    this.searchWordBasic();
-    this.showNotification(`Searching for "${word}"...`, 'info');
-    
-    // Scroll to top to see results
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  highlightPosition(index: number) {
+    // Optional visual highlight log
   }
 
-  playPronunciation(audioUrl: string) {
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.play().catch(error => {
-        console.error('Error playing pronunciation:', error);
-      });
+  unhighlightPosition(index: number) {
+    // Optional visual highlight log
+  }
+
+  // ==========================================
+  // BROWSE BY LENGTH LOGIC
+  // ==========================================
+
+  onBrowseLengthChange() {
+    if (this.browseLength && this.browseLength > 0) {
+      this.browseWords = [];
+      this.browseError = '';
     }
   }
 
-  // Stats panel methods - now hover-based
-  toggleStatsPanel() {
-    this.statsPanelExpanded = !this.statsPanelExpanded;
-  }
-
-  expandStatsPanel() {
-    this.statsPanelExpanded = true;
-    // Reload stats when panel opens
-    this.loadWordStats();
-  }
-
-  collapseStatsPanel() {
-    this.statsPanelExpanded = false;
-  }
-
-  // Basic search methods
-
-  searchWordBasic() {
-    if (!this.searchWord || this.searchWord.trim() === '') {
+  /**
+   * Loads words of a specific exact length.
+   */
+  loadWordsByLength() {
+    if (!this.browseLength || this.browseLength <= 0) {
+      this.browseError = 'Please enter a valid word length.';
+      this.showNotification('Please enter a valid word length.', 'error');
       return;
     }
 
-    this.isSearching = true;
-    this.searchError = '';
-    this.searchResult = null;
+    this.browseLoading = true;
+    this.browseError = '';
 
-    this.wordService.searchBasicWord(this.searchWord.trim()).subscribe({
-      next: (result) => {
-        this.searchResult = result;
-        console.log('Search result:', result); // Debug log
-        if (result.oxford) {
-          console.log('Oxford data:', result.oxford); // Debug log
-          console.log('Synonyms:', result.oxford.synonyms); // Debug synonyms
-        }
-        this.isSearching = false;
-        if (result.oxford || result.inCollection) {
-          this.showNotification(`Found details for "${result.word}"!`, 'success');
-        } else {
-          this.showNotification(`No Oxford details found for "${result.word}".`, 'info');
-        }
-      },
-      error: (error) => {
-        this.searchError = 'Error searching for word: ' + error.message;
-        this.isSearching = false;
-        this.showNotification('Error searching for word. Check backend connection.', 'error');
-      }
-    });
-  }
-
-  addWordToCollection(word: string) {
-    if (!word || word.trim() === '') {
-      return;
-    }
-
-    console.log('Adding word to collection:', word); // Debug
-    this.wordService.addWordWithValidation(word.trim()).subscribe({
+    this.wordService.getWordsByLength(this.browseLength).subscribe({
       next: (response) => {
-        console.log('Add word response:', response); // Debug
-        if (response.success) {
-          // Update the search result to reflect the word is now in collection
-          if (this.searchResult) {
-            this.searchResult.inCollection = true;
-          }
-          
-          // Show appropriate message based on whether it was new
-          if (response.was_new) {
-            this.showNotification(`"${word}" added to your collection! (New word)`, 'success');
-          } else {
-            this.showNotification(`"${word}" was already in your collection.`, 'info');
-          }
-          
-          // Reload word stats to reflect the new word count immediately
-          console.log('Reloading stats after adding word...'); // Debug
-          this.loadWordStats();
-        } else {
-          this.searchError = response.message;
-          this.showNotification(response.message, 'error');
-        }
+        this.browseWords = response.words;
+        this.browseLoading = false;
+        this.showNotification(`Found ${response.words.length} words of length ${this.browseLength}!`, 'success');
       },
       error: (error) => {
-        console.error('Error adding word:', error); // Debug
-        this.searchError = 'Error adding word to collection: ' + error.message;
-        this.showNotification('Error adding word to collection', 'error');
+        console.error('Error loading words by length:', error);
+        this.browseError = 'Failed to load words. Check backend.';
+        this.browseLoading = false;
+        this.showNotification('Failed to load words. Check backend connection.', 'error');
       }
     });
   }
 
-  onSearchModeChange() {
-    // Clear search results when switching modes
-    this.searchResult = null;
-    this.searchError = '';
-    this.searchWord = '';
-    this.showNotification(`Switched to ${this.searchMode === 'basic' ? 'Basic' : this.searchMode === 'advanced' ? 'Advanced' : 'Puzzle'} mode.`, 'info');
+  clearBrowse() {
+    this.browseLength = 5;
+    this.browseWords = [];
+    this.browseError = '';
+    this.browseLoading = false;
+    this.showNotification('Browse cleared', 'info');
   }
 
-  // Search toggle methods
-  toggleSearchMode() {
-    if (this.searchMode === 'basic') {
-      this.searchMode = 'advanced';
-    } else if (this.searchMode === 'advanced') {
-      this.searchMode = 'basic';
-    } else {
-      // If in puzzle mode, go to basic
-      this.searchMode = 'basic';
+  // ==========================================
+  // SYSTEM STATISTICS & THEMES
+  // ==========================================
+
+  /**
+   * Loads backend dictionary parameters.
+   */
+  loadWordStats() {
+    this.wordService.getWordStats().subscribe({
+      next: (stats) => {
+        this.wordStats = stats;
+        this.updateTickerItems();
+      },
+      error: (error) => {
+        console.error('Error loading word stats:', error);
+        this.error = 'Failed to load word statistics';
+        this.showNotification('Failed to load word statistics', 'error');
+      }
+    });
+  }
+
+  /**
+   * Prepares tickers for dashboard display.
+   */
+  updateTickerItems() {
+    if (this.wordStats) {
+      this.tickerItems = [
+        `📚 ${this.wordStats.total_words.toLocaleString()} Total Words`,
+        `📏 Length Range: ${this.wordStats.min_length}-${this.wordStats.max_length} letters`,
+        `📊 Average Length: ${this.wordStats.avg_length} letters`,
+        `🎯 Database Status: Active`,
+        `✨ Oxford Dictionary: Integrated`,
+        `🔍 Search Modes: Basic & Advanced & Puzzle`,
+        `🧩 Puzzle Solver: Available`,
+        `💡 Live Updates: Enabled`,
+        `⚡ Real-time Search`,
+        `🌟 Material Design UI`
+      ];
     }
-    this.onSearchModeChange();
-  }
-
-  expandSearchToggle() {
-    this.searchToggleExpanded = true;
-  }
-
-  collapseSearchToggle() {
-    this.searchToggleExpanded = false;
-  }
-
-  // Puzzle toggle methods
-  togglePuzzlePanel() {
-    if (this.searchMode === 'puzzle') {
-      this.searchMode = 'basic';
-      this.showNotification('Switched to Basic Search', 'info');
-    } else {
-      this.searchMode = 'puzzle';
-      this.showNotification('Puzzle Solver activated', 'info');
-    }
-  }
-
-  expandPuzzleToggle() {
-    this.puzzleToggleExpanded = true;
-  }
-
-  collapsePuzzleToggle() {
-    this.puzzleToggleExpanded = false;
   }
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     document.body.classList.toggle('dark-mode', this.isDarkMode);
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.showNotification(
       `Switched to ${this.isDarkMode ? 'dark' : 'light'} mode`,
       'info'
     );
   }
 
-  // Performance stats methods
   togglePerformanceStats() {
     this.performanceStatsVisible = !this.performanceStatsVisible;
     if (this.performanceStatsVisible && !this.performanceStats) {
@@ -571,52 +544,87 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // Browse by length methods
-  onBrowseLengthChange() {
-    if (this.browseLength && this.browseLength > 0) {
-      this.browseWords = [];
-      this.browseError = '';
-    }
-  }
+  // ==========================================
+  // UI INTERACTION HELPERS
+  // ==========================================
 
-  loadWordsByLength() {
-    if (!this.browseLength || this.browseLength <= 0) {
-      this.browseError = 'Please enter a valid word length.';
-      this.showNotification('Please enter a valid word length.', 'error');
-      return;
-    }
-
-    this.browseLoading = true;
-    this.browseError = '';
-
-    this.wordService.getWordsByLength(this.browseLength).subscribe({
-      next: (response) => {
-        this.browseWords = response.words;
-        this.browseLoading = false;
-        this.showNotification(`Found ${response.words.length} words of length ${this.browseLength}!`, 'success');
-      },
-      error: (error) => {
-        console.error('Error loading words by length:', error);
-        this.browseError = 'Failed to load words. Make sure the backend is running.';
-        this.browseLoading = false;
-        this.showNotification('Failed to load words. Check backend connection.', 'error');
-      }
+  /**
+   * Shows a visual SnackBar notification message.
+   * @param message Text string
+   * @param type Notification visual type
+   */
+  showNotification(message: string, type: 'success' | 'error' | 'info' = 'info') {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`]
     });
   }
 
-  clearBrowse() {
-    this.browseLength = 5;
-    this.browseWords = [];
-    this.browseError = '';
-    this.browseLoading = false;
-    this.showNotification('Browse cleared', 'info');
+  /**
+   * Copies the specified string to the clipboard.
+   * @param word text content
+   */
+  copyWordToClipboard(word: string) {
+    navigator.clipboard.writeText(word).then(() => {
+      this.showNotification(`"${word}" copied to clipboard!`, 'success');
+    }).catch(() => {
+      this.showNotification('Failed to copy to clipboard', 'error');
+    });
   }
 
-  setHoveredCard(cardId: string | null) {
-    this.hoveredCard = cardId;
+  /**
+   * Focuses and runs search basic details on click suggestion chips.
+   * @param word target query
+   */
+  exploreWord(word: string) {
+    this.searchMode = 'basic';
+    this.searchWord = word;
+    this.searchWordBasic();
+    this.showNotification(`Searching for "${word}"...`, 'info');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  getCardState(cardId: string): string {
-    return this.hoveredCard === cardId ? 'hovered' : 'default';
+  /**
+   * Plays the audio pronunciation files from URLs.
+   * @param audioUrl link
+   */
+  playPronunciation(audioUrl: string) {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play().catch(error => {
+        console.error('Error playing pronunciation:', error);
+      });
+    }
   }
+
+  // Trivial index tracking trackers
+  trackByIndex(index: number, item: any): number { return index; }
+  trackByWord(index: number, word: string): string { return word; }
+
+  // Legacy layout togglers
+  toggleStatsPanel() { this.statsPanelExpanded = !this.statsPanelExpanded; }
+  expandStatsPanel() { this.statsPanelExpanded = true; this.loadWordStats(); }
+  collapseStatsPanel() { this.statsPanelExpanded = false; }
+  onSearchModeChange() {
+    this.searchResult = null;
+    this.searchError = '';
+    this.searchWord = '';
+    this.showNotification(`Switched to ${this.searchMode === 'basic' ? 'Basic' : this.searchMode === 'advanced' ? 'Advanced' : 'Puzzle'} mode.`, 'info');
+  }
+  toggleSearchMode() {
+    this.searchMode = this.searchMode === 'basic' ? 'advanced' : 'basic';
+    this.onSearchModeChange();
+  }
+  expandSearchToggle() { this.searchToggleExpanded = true; }
+  collapseSearchToggle() { this.searchToggleExpanded = false; }
+  togglePuzzlePanel() {
+    this.searchMode = this.searchMode === 'puzzle' ? 'basic' : 'puzzle';
+    this.onSearchModeChange();
+  }
+  expandPuzzleToggle() { this.puzzleToggleExpanded = true; }
+  collapsePuzzleToggle() { this.puzzleToggleExpanded = false; }
+  setHoveredCard(cardId: string | null) { this.hoveredCard = cardId; }
+  getCardState(cardId: string): string { return this.hoveredCard === cardId ? 'hovered' : 'default'; }
 }

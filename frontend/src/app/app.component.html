@@ -4,36 +4,39 @@
     <div class="header-content">
       <div class="logo-section">
         <div class="logo-icon">📚</div>
-        <h1 class="app-title">Word Explorer</h1>
-        <p class="app-subtitle">Discover amazing words together!</p>
+        <div class="logo-text-group">
+          <h1 class="app-title">Word Explorer</h1>
+          <p class="app-subtitle">Discover amazing words together!</p>
+        </div>
       </div>
       
-      <div class="header-actions">
-        <button class="fun-button theme-toggle" (click)="toggleTheme()" title="Toggle Theme">
-          <span class="button-icon">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-        </button>
-        <button class="fun-button performance-button" (click)="togglePerformanceStats()" title="Performance Stats">
-          <span class="button-icon">⚡</span>
-          <span class="button-text">Performance</span>
-        </button>
-      </div>
-      
-      <!-- Inline Stats Display -->
-      <div class="header-stats" *ngIf="wordStats">
-        <div class="stat-item">
-          <span class="stat-icon">📚</span>
-          <span class="stat-value">{{ wordStats.total_words | number }}</span>
-          <span class="stat-label">Words</span>
+      <div class="header-right">
+        <!-- Inline Stats Display -->
+        <div class="header-stats" *ngIf="wordStats">
+          <div class="stat-item">
+            <span class="stat-icon">📚</span>
+            <span class="stat-text"><strong>{{ wordStats.total_words | number }}</strong> words</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-icon">📏</span>
+            <span class="stat-text"><strong>{{ wordStats.min_length }}-{{ wordStats.max_length }}</strong> letters</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-icon">📊</span>
+            <span class="stat-text"><strong>{{ wordStats.avg_length }}</strong> avg</span>
+          </div>
         </div>
-        <div class="stat-item">
-          <span class="stat-icon">📏</span>
-          <span class="stat-value">{{ wordStats.min_length }}-{{ wordStats.max_length }}</span>
-          <span class="stat-label">Letters</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-icon">📊</span>
-          <span class="stat-value">{{ wordStats.avg_length }}</span>
-          <span class="stat-label">Avg</span>
+        
+        <div class="header-actions">
+          <button class="fun-button theme-toggle" (click)="toggleTheme()" title="Toggle Theme">
+            <span class="button-icon">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+          </button>
+          <button class="fun-button performance-button" (click)="togglePerformanceStats()" title="Performance Stats">
+            <span class="button-icon">⚡</span>
+            <span class="button-text">Performance</span>
+          </button>
         </div>
       </div>
     </div>
