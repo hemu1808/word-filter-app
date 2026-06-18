@@ -2,7 +2,7 @@ services:
   - type: web
     name: word-filter-backend
     env: docker
-    dockerfilePath: Dockerfile
+    dockerfilePath: backend/Dockerfile
     dockerContext: backend
     plan: free
     envVars:
