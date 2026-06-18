@@ -2,7 +2,7 @@
 # Angular SPA - Route all requests to index.html except specific paths
 
 # API requests to backend (will be updated with real Render URL)
-/api/* https://api.example.com/:splat 200
+/api/* https://word-filter-backend.onrender.com/:splat 200
 
 # Health check endpoint
 /health /index.html 200
