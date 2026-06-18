@@ -1,0 +1,18 @@
+# Cloudflare Pages Redirect Rules
+# Angular SPA - Route all requests to index.html except specific paths
+
+# API requests to backend (will be updated with real Render URL)
+/api/* https://api.example.com/:splat 200
+
+# Health check endpoint
+/health /index.html 200
+
+# Main SPA routing
+/* /index.html 200
+
+# Specific redirects for old URLs (if migrating from old infrastructure)
+/old-app/* /index.html 301
+
+# WWW redirect
+http://example.com/* https://www.example.com/:splat 301
+https://example.com/* https://www.example.com/:splat 301

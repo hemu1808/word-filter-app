@@ -289,7 +289,7 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint for Kubernetes"""
+    """Health check endpoint for Kubernetes/Railway"""
     try:
         word_count = await word_manager.get_word_count()
         storage_info = await word_manager.get_storage_info()
@@ -298,11 +298,63 @@ async def health_check():
             "word_count": word_count,
             "storage_connected": storage_info.get("connected", False),
             "storage_provider": storage_info.get("provider", "unknown"),
-            "storage_type": storage_info.get("type", "unknown")
+            "storage_type": storage_info.get("type", "unknown"),
+            "timestamp": time.time()
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail=f"Service unhealthy: {str(e)}")
+
+@app.get("/health/ready")
+async def readiness_check():
+    """Readiness probe for deployment orchestrators"""
+    try:
+        # Check if word database is accessible and loaded
+        if not words_list:
+            await load_words_concurrent()
+        
+        if not words_list:
+            raise Exception("Word database not loaded")
+        
+        return {
+            "ready": True,
+            "words_loaded": len(words_list),
+            "timestamp": time.time()
+        }
+    except Exception as e:
+        logger.error(f"Readiness check failed: {e}")
+        raise HTTPException(status_code=503, detail="Not ready")
+
+@app.get("/health/live")
+async def liveness_check():
+    """Liveness probe for deployment orchestrators"""
+    try:
+        # Simple check that the service is running
+        return {
+            "alive": True,
+            "uptime": time.time(),
+            "version": "2.2.0"
+        }
+    except Exception as e:
+        logger.error(f"Liveness check failed: {e}")
+        raise HTTPException(status_code=503, detail="Service dead")
+
+@app.get("/metrics")
+async def prometheus_metrics():
+    """Prometheus metrics endpoint for monitoring"""
+    try:
+        metrics = [
+            f"# HELP word_filter_total_words Total number of words in database",
+            f"# TYPE word_filter_total_words gauge",
+            f"word_filter_total_words {len(words_list)}",
+            f"# HELP word_filter_api_requests_total Total API requests",
+            f"# TYPE word_filter_api_requests_total counter",
+            f"word_filter_api_requests_total 0"  # TODO: Implement counter
+        ]
+        return "\n".join(metrics) + "\n"
+    except Exception as e:
+        logger.error(f"Metrics endpoint failed: {e}")
+        raise HTTPException(status_code=500, detail="Metrics unavailable")
 
 # WORD QUERY ENDPOINTS
 
