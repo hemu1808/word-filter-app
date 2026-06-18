@@ -1,0 +1,60 @@
+# Cloudflare Pages HTTP Headers Configuration
+# Enterprise-level security and caching headers
+
+# HTML files - no cache to ensure users get updates
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0, private
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), microphone=(), payment=()
+
+# Angular bundles - long cache (versioned with hash)
+/*.bundle.js
+/assets/js/*.js
+  Cache-Control: public, max-age=31536000, immutable, s-maxage=31536000
+  X-Content-Type-Options: nosniff
+  Content-Security-Policy: default-src 'self' https://api.example.com; script-src 'self' 'unsafe-inline' https://cdn.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.example.com
+
+# Stylesheets - long cache
+/*.css
+/assets/css/*.css
+  Cache-Control: public, max-age=31536000, immutable, s-maxage=31536000
+  X-Content-Type-Options: nosniff
+
+# Images - 30 day cache
+/assets/images/*
+/assets/icons/*
+  Cache-Control: public, max-age=2592000, immutable, s-maxage=2592000
+  X-Content-Type-Options: nosniff
+
+# Fonts - long cache
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable, s-maxage=31536000
+  Access-Control-Allow-Origin: *
+  X-Content-Type-Options: nosniff
+
+# API routes - no cache
+/api/*
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0, private
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, Authorization
+
+# Static files - 1 hour cache
+/*.txt
+/*.json
+/*.xml
+  Cache-Control: public, max-age=3600, s-maxage=3600
+  X-Content-Type-Options: nosniff
+
+# Default headers for all responses
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), microphone=(), payment=(), usb=(), magnetometer=(), gyroscope=()
+  Server: Cloudflare
