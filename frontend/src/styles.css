@@ -3,6 +3,7 @@
 
 /* CSS Custom Properties - Kid-Friendly & Parent-Friendly Theme */
 :root {
+  color-scheme: light;
   /* Primary Colors - Bright & Cheerful */
   --primary: #4F46E5;
   --primary-light: #6366F1;
@@ -280,6 +281,7 @@ body::before {
 
 /* Dark mode support */
 body.dark-mode {
+  color-scheme: dark;
   --surface-primary: #1E293B;
   --surface-card: #1E293B;
   --surface-glass: rgba(30, 41, 59, 0.9);

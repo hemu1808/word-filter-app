@@ -22,12 +22,16 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Node.js: $nodeVersion" -ForegroundColor Green
 
-# Check if words.txt exists
+# Ensure words.txt exists (bootstrap from bundled seed list if missing)
 Write-Host "Checking words.txt..." -ForegroundColor Yellow
 if (Test-Path "backend\words.txt") {
     Write-Host "words.txt found" -ForegroundColor Green
+} elseif (Test-Path "backend\google-10k-common.txt") {
+    Write-Host "words.txt not found - creating from google-10k-common.txt..." -ForegroundColor Yellow
+    Copy-Item "backend\google-10k-common.txt" "backend\words.txt"
+    Write-Host "Created backend\words.txt from seed list" -ForegroundColor Green
 } else {
-    Write-Host "WARNING: words.txt not found in backend directory" -ForegroundColor Yellow
+    Write-Host "WARNING: words.txt not found and no seed list available" -ForegroundColor Yellow
 }
 
 Write-Host ""

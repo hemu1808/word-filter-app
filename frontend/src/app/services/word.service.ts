@@ -56,40 +56,10 @@ export class WordService {
     return this.http.get<string[]>(`${this.baseUrl}/words/interactive`, { params });
   }
 
-  // Basic search with Oxford Dictionary integration
+  // Basic search with Oxford Dictionary integration (single backend call)
   searchBasicWord(word: string): Observable<BasicSearchResult> {
-    return new Observable(observer => {
-      // First, check if word exists in our collection
-      this.checkWordInCollection(word).subscribe({
-        next: (inCollection) => {
-          // Then, get Oxford Dictionary details
-          this.validateWordWithOxford(word).subscribe({
-            next: (oxfordResult) => {
-              const result: BasicSearchResult = {
-                word: word.toLowerCase(),
-                inCollection: inCollection,
-                oxford: oxfordResult.oxford_validation
-              };
-              observer.next(result);
-              observer.complete();
-            },
-            error: (error) => {
-              // Even if Oxford fails, we can still show collection status
-              const result: BasicSearchResult = {
-                word: word.toLowerCase(),
-                inCollection: inCollection,
-                oxford: null
-              };
-              observer.next(result);
-              observer.complete();
-            }
-          });
-        },
-        error: (error) => {
-          observer.error(error);
-        }
-      });
-    });
+    const params = new HttpParams().set('word', word.trim());
+    return this.http.get<BasicSearchResult>(`${this.baseUrl}/words/search-basic`, { params });
   }
 
   // Check if word exists in our collection

@@ -116,10 +116,21 @@ async def log_requests(request: Request, call_next):
         )
         raise
 
-# Configure CORS to allow Angular frontend
+# Configure CORS to allow Angular frontend (avoid wildcard + credentials conflict)
+_default_origins = ["http://localhost:4200", "http://localhost:4201"]
+_cors_env = os.getenv("CORS_ORIGINS", "").strip()
+if _cors_env:
+    cors_origins = [
+        origin.strip()
+        for origin in _cors_env.split(",")
+        if origin.strip() and origin.strip() != "*"
+    ] or _default_origins
+else:
+    cors_origins = _default_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200", "http://localhost:4201"] + os.getenv("CORS_ORIGINS", "*").split(","),
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
