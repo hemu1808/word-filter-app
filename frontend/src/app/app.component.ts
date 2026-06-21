@@ -129,12 +129,12 @@ export class AppComponent implements OnInit {
   // ==========================================
 
   ngOnInit() {
-    // Initialize theme based on storage or OS preference
+    // Initialize theme based on storage or default to light mode
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       this.isDarkMode = savedTheme === 'dark';
     } else {
-      this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.isDarkMode = false;
     }
     document.body.classList.toggle('dark-mode', this.isDarkMode);
 
