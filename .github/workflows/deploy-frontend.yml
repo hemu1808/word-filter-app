@@ -8,6 +8,7 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/deploy-frontend.yml'
+      - 'wrangler.toml'
   pull_request:
     branches:
       - main

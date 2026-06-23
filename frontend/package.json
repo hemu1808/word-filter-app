@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && node -e \"require('fs').copyFileSync('dist/word-filter-frontend/index.html','dist/word-filter-frontend/404.html')\"",
+    "build": "ng build",
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/word-filter-frontend/index.html','dist/word-filter-frontend/404.html')\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

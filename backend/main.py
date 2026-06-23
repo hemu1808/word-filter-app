@@ -120,7 +120,8 @@ async def log_requests(request: Request, call_next):
 _default_origins = [
     "http://localhost:4200",
     "http://localhost:4201",
-    "https://word-dol.pages.dev/",  # Cloudflare Pages production
+    "https://word-dol.pages.dev",  # Cloudflare Pages production
+    "https://word-filter-app.pages.dev",  # Cloudflare Pages default domain
 ]
 _cors_env = os.getenv("CORS_ORIGINS", "").strip()
 if _cors_env == "*":
