@@ -20,6 +20,12 @@ try {
     pip install -r requirements.txt
 }
 
+# Ensure words.txt exists before starting the server
+if (-not (Test-Path "words.txt") -and (Test-Path "google-10k-common.txt")) {
+    Write-Host "Creating words.txt from google-10k-common.txt..." -ForegroundColor Yellow
+    Copy-Item "google-10k-common.txt" "words.txt"
+}
+
 Write-Host "Starting server on http://localhost:8001" -ForegroundColor Cyan
 python main.py
 Write-Host "Backend server stopped." -ForegroundColor Red

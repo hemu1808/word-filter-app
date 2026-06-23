@@ -117,10 +117,31 @@ async def log_requests(request: Request, call_next):
         raise
 
 # Configure CORS to allow Angular frontend
+_default_origins = [
+    "http://localhost:4200",
+    "http://localhost:4201",
+    "https://word-dol.pages.dev/",  # Cloudflare Pages production
+]
+_cors_env = os.getenv("CORS_ORIGINS", "").strip()
+if _cors_env == "*":
+    # Allow all origins (without credentials to avoid browser CORS errors)
+    cors_origins = ["*"]
+    _cors_credentials = False
+elif _cors_env:
+    cors_origins = [
+        origin.strip()
+        for origin in _cors_env.split(",")
+        if origin.strip()
+    ] or _default_origins
+    _cors_credentials = True
+else:
+    cors_origins = _default_origins
+    _cors_credentials = True
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200", "http://localhost:4201"] + os.getenv("CORS_ORIGINS", "*").split(","),
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_credentials=_cors_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )

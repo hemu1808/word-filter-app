@@ -9,6 +9,14 @@ from oxford_validator import OxfordValidator
 
 logger = logging.getLogger(__name__)
 
+BACKEND_DIR = Path(__file__).resolve().parent
+DEFAULT_WORDS_FILE = BACKEND_DIR / "words.txt"
+SEED_WORDS_FILES = (
+    BACKEND_DIR / "google-10k-common.txt",
+    BACKEND_DIR / "words_seed.txt",
+)
+
+
 class WordManager:
     """
     Unified Word Manager supporting both Civo Object Store (S3-compatible) 
@@ -96,15 +104,20 @@ class WordManager:
     def _init_file_storage(self):
         """Initialize local file storage"""
         self.storage_type = "file"
-        self.words_file_path = os.getenv("WORDS_FILE_PATH", "words.txt")
-        
+        env_path = os.getenv("WORDS_FILE_PATH")
+        if env_path:
+            path = Path(env_path)
+            self.words_file_path = str(path if path.is_absolute() else BACKEND_DIR / path)
+        else:
+            self.words_file_path = str(DEFAULT_WORDS_FILE)
+
         self.storage_info = {
             "provider": "local",
             "type": "file",
             "file_path": self.words_file_path,
             "connected": True
         }
-        
+
         logger.info(f"Initialized local file storage: {self.words_file_path}")
     
     async def load_words(self) -> List[str]:
@@ -153,9 +166,11 @@ class WordManager:
         try:
             words_path = Path(self.words_file_path)
             
-            if not words_path.exists():
-                logger.warning(f"Local words file {self.words_file_path} not found, creating with sample words")
-                await self._create_sample_words_file()
+            if not words_path.exists() or words_path.stat().st_size == 0:
+                logger.warning(
+                    f"Local words file {self.words_file_path} missing or empty, bootstrapping from seed list"
+                )
+                await self._bootstrap_words_file()
             
             loop = asyncio.get_event_loop()
             content = await loop.run_in_executor(
@@ -194,26 +209,46 @@ class WordManager:
         except Exception as e:
             logger.error(f"Failed to create empty words file: {e}")
     
-    async def _create_sample_words_file(self):
-        """Create sample words file locally"""
-        sample_words = [
+    def _read_seed_words(self) -> List[str]:
+        """Load seed words from bundled word lists, falling back to a small sample set."""
+        for seed_path in SEED_WORDS_FILES:
+            if not seed_path.exists():
+                continue
+            try:
+                content = seed_path.read_text(encoding="utf-8", errors="ignore")
+                words = [
+                    word.strip().lower()
+                    for word in content.splitlines()
+                    if word.strip() and word.strip().isalpha()
+                ]
+                if words:
+                    logger.info(f"Using {len(words)} seed words from {seed_path.name}")
+                    return words
+            except Exception as e:
+                logger.warning(f"Could not read seed file {seed_path}: {e}")
+
+        return [
             "apple", "banana", "cherry", "date", "elderberry",
             "fig", "grape", "honeydew", "kiwi", "lemon",
             "mango", "nectarine", "orange", "papaya", "quince",
-            "raspberry", "strawberry", "tangerine", "ugli", "vanilla"
+            "raspberry", "strawberry", "tangerine", "ugli", "vanilla",
         ]
+
+    async def _bootstrap_words_file(self):
+        """Create words.txt locally from a bundled seed list when missing."""
+        seed_words = self._read_seed_words()
         try:
             words_path = Path(self.words_file_path)
             words_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             loop = asyncio.get_event_loop()
             await loop.run_in_executor(
                 None,
-                lambda: words_path.write_text('\n'.join(sample_words), encoding='utf-8')
+                lambda: words_path.write_text("\n".join(seed_words), encoding="utf-8"),
             )
-            logger.info(f"Created local sample words file with {len(sample_words)} words")
+            logger.info(f"Created local words file with {len(seed_words)} words at {words_path}")
         except Exception as e:
-            logger.error(f"Failed to create local sample words file: {e}")
+            logger.error(f"Failed to bootstrap local words file: {e}")
     
     async def save_words_to_storage(self) -> bool:
         """Save current words list to storage"""
