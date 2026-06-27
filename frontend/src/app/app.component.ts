@@ -29,8 +29,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   /** Quick suggestions for standard search */
   quickSuggestions = [
-    'friendly', 'apple', 'share', 'help', 'please', 
-    'thanks', 'nature', 'gentle', 'empathy', 'courage'
+    { word: 'friendly', icon: 'handshake' },
+    { word: 'apple', icon: 'nutrition' },
+    { word: 'share', icon: 'share' },
+    { word: 'help', icon: 'support' },
+    { word: 'please', icon: 'favorite' },
+    { word: 'thanks', icon: 'volunteer_activism' },
+    { word: 'nature', icon: 'park' },
+    { word: 'gentle', icon: 'spa' },
+    { word: 'empathy', icon: 'psychology' },
+    { word: 'courage', icon: 'shield' }
   ];
 
   /** Advanced filter properties */
@@ -97,7 +105,16 @@ export class AppComponent implements OnInit, OnDestroy {
   // Profile settings
   profileName = 'User';
   activeTheme = 'blue';
+  activeFont = 'dm-sans';
+
+  // Font options for the profile page selector
+  fontOptions = [
+    { id: 'dm-sans', name: 'DM Sans', cssClass: '', preview: 'Terse' },
+    { id: 'lora', name: 'Lora', cssClass: 'font-lora', preview: 'Terse' }
+  ];
   performanceStatsVisible = false;
+  telemetryLoading = false;
+  telemetryError = '';
 
   // Daily puzzle solver properties
   puzzleGuess = '';
@@ -106,10 +123,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Weekly Word Section
   weeklyWords = [
-    { word: 'terse', definition: 'sparing in the use of words; abrupt.' },
-    { word: 'luminous', definition: 'full of or shedding light; bright or shining.' },
-    { word: 'resilient', definition: 'able to withstand or recover quickly from difficult conditions.' },
-    { word: 'ephemeral', definition: 'lasting for a very short time.' }
+    { word: 'terse', definition: 'sparing in the use of words; abrupt.', icon: 'auto_stories' },
+    { word: 'luminous', definition: 'full of or shedding light; bright or shining.', icon: 'emoji_objects' },
+    { word: 'resilient', definition: 'able to withstand or recover quickly from difficult conditions.', icon: 'school' },
+    { word: 'ephemeral', definition: 'lasting for a very short time.', icon: 'local_library' }
   ];
   
   /** Subscription management */
@@ -146,6 +163,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // Load active theme
     const savedTheme = localStorage.getItem('activeTheme') || 'blue';
+
+    // Load saved font
+    const savedFont = localStorage.getItem('activeFont') || 'dm-sans';
+    this.changeFont(savedFont);
     this.changeTheme(savedTheme);
 
     // Load profile name
@@ -893,37 +914,60 @@ export class AppComponent implements OnInit, OnDestroy {
   // ==========================================
 
   loadTelemetryData() {
+    this.telemetryLoading = true;
+    this.telemetryError = '';
+    let performanceStatsLoaded = false;
+    let oxfordStatsLoaded = false;
+
     this.wordService.getPerformanceStats().subscribe({
       next: (stats) => {
         this.performanceStats = stats;
+        this.updatePrometheusMetrics();
+        performanceStatsLoaded = true;
+        if (oxfordStatsLoaded) {
+          this.telemetryLoading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error loading performance stats:', err);
+        this.telemetryError = 'Failed to retrieve performance metrics. Please verify the backend service is running on port 8001.';
+        this.telemetryLoading = false;
       }
     });
 
     this.wordService.getOxfordCacheStats().subscribe({
       next: (stats) => {
         this.oxfordStats = stats.oxford_cache;
+        this.updatePrometheusMetrics();
+        oxfordStatsLoaded = true;
+        if (performanceStatsLoaded) {
+          this.telemetryLoading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error loading Oxford cache stats:', err);
+        oxfordStatsLoaded = true;
+        if (performanceStatsLoaded) {
+          this.telemetryLoading = false;
+        }
       }
     });
+  }
 
-    // Load raw prometheus metrics via direct http call
-    this.wordService.getPerformanceStats().subscribe({
-      next: () => {
-        // Fetch raw metrics text manually
-        this.prometheusMetrics = 
-          `# HELP word_filter_total_words Total number of words in database\n` +
-          `# TYPE word_filter_total_words gauge\n` +
-          `word_filter_total_words ${this.wordStats?.total_words || 416310}\n` +
-          `# HELP word_filter_api_requests_total Total API requests\n` +
-          `# TYPE word_filter_api_requests_total counter\n` +
-          `word_filter_api_requests_total ${Math.floor(Math.random() * 40) + 120}\n` +
-          `# HELP word_filter_oxford_cache_hits Total Oxford Dictionary cache hits\n` +
-          `# TYPE word_filter_oxford_cache_hits counter\n` +
-          `word_filter_oxford_cache_hits ${this.oxfordStats?.hits || 12}\n` +
-          `# HELP word_filter_oxford_cache_misses Total Oxford Dictionary cache misses\n` +
-          `# TYPE word_filter_oxford_cache_misses counter\n` +
-          `word_filter_oxford_cache_misses ${this.oxfordStats?.misses || 4}`;
-      }
-    });
+  updatePrometheusMetrics() {
+    this.prometheusMetrics = 
+      `# HELP word_filter_total_words Total number of words in database\n` +
+      `# TYPE word_filter_total_words gauge\n` +
+      `word_filter_total_words ${this.wordStats?.total_words || 416310}\n` +
+      `# HELP word_filter_api_requests_total Total API requests\n` +
+      `# TYPE word_filter_api_requests_total counter\n` +
+      `word_filter_api_requests_total ${Math.floor(Math.random() * 40) + 120}\n` +
+      `# HELP word_filter_oxford_cache_hits Total Oxford Dictionary cache hits\n` +
+      `# TYPE word_filter_oxford_cache_hits counter\n` +
+      `word_filter_oxford_cache_hits ${this.oxfordStats?.hits || 0}\n` +
+      `# HELP word_filter_oxford_cache_misses Total Oxford Dictionary cache misses\n` +
+      `# TYPE word_filter_oxford_cache_misses counter\n` +
+      `word_filter_oxford_cache_misses ${this.oxfordStats?.misses || 0}`;
   }
 
   generateSimulatedLogs() {
@@ -1001,7 +1045,7 @@ export class AppComponent implements OnInit, OnDestroy {
   changeTheme(theme: string) {
     this.activeTheme = theme;
     // Remove all previous theme classes from document.documentElement
-    const themesList = ['theme-green', 'theme-indigo', 'theme-amber', 'theme-rose', 'theme-violet', 'theme-slate'];
+    const themesList = ['theme-green', 'theme-indigo', 'theme-amber', 'theme-rose', 'theme-violet', 'theme-slate', 'theme-teal'];
     themesList.forEach(t => document.documentElement.classList.remove(t));
     
     if (theme !== 'blue') {
@@ -1009,6 +1053,18 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     localStorage.setItem('activeTheme', theme);
     this.showNotification(`Theme changed to ${theme.charAt(0).toUpperCase() + theme.slice(1)}`, 'success');
+  }
+
+  changeFont(fontId: string) {
+    this.activeFont = fontId;
+    const fontClasses = ['font-lora'];
+    fontClasses.forEach(f => document.documentElement.classList.remove(f));
+
+    const selected = this.fontOptions.find(f => f.id === fontId);
+    if (selected && selected.cssClass) {
+      document.documentElement.classList.add(selected.cssClass);
+    }
+    localStorage.setItem('activeFont', fontId);
   }
 
   saveProfileName(name: string) {

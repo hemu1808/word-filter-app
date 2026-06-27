@@ -140,6 +140,13 @@ module.exports = {
             "lineHeight": "28px",
             "fontWeight": "600"
           }
+        ],
+        "headline-sm": [
+          "18px",
+          {
+            "lineHeight": "26px",
+            "fontWeight": "600"
+          }
         ]
       }
     },

@@ -2,18 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base Font Override */
-body, .mat-typography {
-  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+/* Base Font Override - Default: DM Sans */
+body, .mat-typography, h1, h2, h3, h4, .font-display-lg, .font-headline-lg, .font-headline-md, .brand-font {
+  font-family: 'DM Sans', sans-serif !important;
   background-color: var(--background) !important;
   color: var(--on-background) !important;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Graphic Font for Branding and Headings */
-h1, h2, h3, h4, .font-display-lg, .font-headline-lg, .font-headline-md, .brand-font {
-  font-family: 'Cormorant Garamond', serif !important;
+/* Lora Font Option (applied to <html> element) */
+.font-lora body, .font-lora .mat-typography,
+.font-lora h1, .font-lora h2, .font-lora h3, .font-lora h4,
+.font-lora .font-display-lg, .font-lora .font-headline-lg, .font-lora .font-headline-md, .font-lora .brand-font {
+  font-family: 'Lora', serif !important;
 }
+
+.frosted-navbar {
+  background-color: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+}
+
+.dark .text-outline {
+  color: var(--on-surface-variant) !important;
+}
+.dark .text-outline-variant {
+  color: var(--on-surface) !important;
+}
+
 
 /* ==========================================
    DEFAULT THEME: BLUE (OCEAN BREEZE)
@@ -651,6 +667,95 @@ h1, h2, h3, h4, .font-display-lg, .font-headline-lg, .font-headline-md, .brand-f
   --surface-tint: #94a3b8;
 }
 
+/* ==========================================
+   THEME 8: TEAL (TURQUOISE SHORE)
+   ========================================== */
+.theme-teal {
+  --primary: #0d9488;
+  --on-primary: #ffffff;
+  --primary-container: #ccfbf1;
+  --on-primary-container: #115e59;
+  --on-primary-fixed-variant: #115e59;
+  --primary-fixed-dim: #14b8a6;
+  --primary-fixed: #ccfbf1;
+  --inverse-primary: #5eead4;
+  --secondary: #3b7a75;
+  --on-secondary: #ffffff;
+  --secondary-container: #e6f7f4;
+  --on-secondary-container: #0f4d48;
+  --secondary-fixed: #e6f7f4;
+  --secondary-fixed-dim: #99d5cf;
+  --on-secondary-fixed: #0f4d48;
+  --on-secondary-fixed-variant: #285e59;
+  --tertiary: #0284c7;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #e0f2fe;
+  --on-tertiary-container: #0369a1;
+  --tertiary-fixed: #e0f2fe;
+  --tertiary-fixed-dim: #0ea5e9;
+  --on-tertiary-fixed: #0369a1;
+  --on-tertiary-fixed-variant: #0ea5e9;
+  --background: #f0fdfa;
+  --on-background: #0f1c1a;
+  --surface: #ffffff;
+  --on-surface: #0f1c1a;
+  --surface-variant: #dae5e2;
+  --on-surface-variant: #3f4946;
+  --outline: #707976;
+  --outline-variant: #bfc9c6;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f0fdfa;
+  --surface-container: #e6f7f4;
+  --surface-container-high: #dae5e2;
+  --surface-container-highest: #cedad6;
+  --surface-dim: #cbd5d2;
+  --surface-bright: #ffffff;
+  --surface-tint: #0d9488;
+}
+
+.theme-teal.dark {
+  --primary: #2dd4bf;
+  --on-primary: #003730;
+  --primary-container: #005047;
+  --on-primary-container: #99f6e4;
+  --on-primary-fixed-variant: #99f6e4;
+  --primary-fixed-dim: #2dd4bf;
+  --primary-fixed: #005047;
+  --inverse-primary: #0d9488;
+  --secondary: #99f6e4;
+  --on-secondary: #003730;
+  --secondary-container: #005047;
+  --on-secondary-container: #e6f7f4;
+  --secondary-fixed: #005047;
+  --secondary-fixed-dim: #208277;
+  --on-secondary-fixed: #e6f7f4;
+  --on-secondary-fixed-variant: #99f6e4;
+  --tertiary: #38bdf8;
+  --on-tertiary: #0369a1;
+  --tertiary-container: #0c4a6e;
+  --on-tertiary-container: #e0f2fe;
+  --tertiary-fixed: #0c4a6e;
+  --tertiary-fixed-dim: #38bdf8;
+  --on-tertiary-fixed: #e0f2fe;
+  --on-tertiary-fixed-variant: #38bdf8;
+  --background: #040d0c;
+  --on-background: #ccfbf1;
+  --surface: #0a1715;
+  --on-surface: #ccfbf1;
+  --surface-variant: #3f4946;
+  --on-surface-variant: #bfc9c6;
+  --outline: #899390;
+  --outline-variant: #3f4946;
+  --surface-container-lowest: #020706;
+  --surface-container-low: #040d0c;
+  --surface-container: #0a1715;
+  --surface-container-high: #122421;
+  --surface-container-highest: #1a322e;
+  --surface-dim: #122421;
+  --surface-bright: #0a1715;
+  --surface-tint: #2dd4bf;
+}
+
 /* Material Rounded Icons Base Styling */
 .material-symbols-rounded {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -692,4 +797,13 @@ h1, h2, h3, h4, .font-display-lg, .font-headline-lg, .font-headline-md, .brand-f
   transform: scale(1.2);
   border-color: var(--on-surface);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Modern dynamic primary-colored shadow using color-mix */
+.shadow-themed-primary {
+  box-shadow: 0 4px 16px 0 color-mix(in srgb, var(--primary) 20%, transparent) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.shadow-themed-primary:hover {
+  box-shadow: 0 6px 20px 0 color-mix(in srgb, var(--primary) 30%, transparent) !important;
 }
